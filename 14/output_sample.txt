@@ -1,0 +1,743 @@
+Debug enabled
+O....#....
+O.OO#....#
+.....##...
+OO.#O....O
+.O.....O#.
+O.#..O.#.#
+..O..#O..O
+.......O..
+#....###..
+#OO..#....
+
+Run Subcycle
+Transpose
+Rows=10 cols=10 len(slice)=10
+O....#.... OO.O.O..##
+O.OO#....# ...OO....O
+.....##... .O...#O..O
+OO.#O....O .O.#......
+.O.....O#. .#.O......
+O.#..O.#.# #.#..O#.##
+..O..#O..O ..#...O.#.
+.......O.. ....O#.O#.
+#....###.. ....#.....
+#OO..#.... .#.O.#O...
+Roll rocks: OO.O.O..## with width 10
+Roll rocks: ...OO....O with width 10
+Roll rocks: .O...#O..O with width 10
+Roll rocks: .O.#...... with width 10
+Roll rocks: .#.O...... with width 10
+Roll rocks: #.#..O#.## with width 10
+Roll rocks: ..#...O.#. with width 10
+Roll rocks: ....O#.O#. with width 10
+Roll rocks: ....#..... with width 10
+Roll rocks: .#.O.#O... with width 10
+Transpose
+Rows=10 cols=10 len(slice)=10
+OOOO....## OOOO.#.O..
+OOO....... OO..#....#
+O....#OO.. OO..O##..O
+O..#...... O..#.OO...
+.#O....... ........#.
+#.#O..#.## ..#....#.#
+..#O....#. ..O..#.O.O
+O....#O.#. ..O.......
+....#..... #....###..
+.#O..#O... #....#....
+Rotate 90 degrees
+OOOO.#.O.. => ##....OOOO
+OO..#....# => .......OOO
+OO..O##..O => ..OO#....O
+O..#.OO... => ......#..O
+........#. => .......O#.
+..#....#.# => ##.#..O#.#
+..O..#.O.O => .#....O#..
+..O....... => .#.O#....O
+#....###.. => .....#....
+#....#.... => ...O#..O#.
+Subcycle Result:
+O....#.... => ##....OOOO
+O.OO#....# => .......OOO
+.....##... => ..OO#....O
+OO.#O....O => ......#..O
+.O.....O#. => .......O#.
+O.#..O.#.# => ##.#..O#.#
+..O..#O..O => .#....O#..
+.......O.. => .#.O#....O
+#....###.. => .....#....
+#OO..#.... => ...O#..O#.
+
+Run Subcycle
+Transpose
+Rows=10 cols=10 len(slice)=10
+##....OOOO #....#....
+.......OOO #....###..
+..OO#....O ..O.......
+......#..O ..O..#.O.O
+.......O#. ..#....#.#
+##.#..O#.# ........#.
+.#....O#.. O..#.OO...
+.#.O#....O OO..O##..O
+.....#.... OO..#....#
+...O#..O#. OOOO.#.O..
+Roll rocks: #....#.... with width 10
+Roll rocks: #....###.. with width 10
+Roll rocks: ..O....... with width 10
+Roll rocks: ..O..#.O.O with width 10
+Roll rocks: ..#....#.# with width 10
+Roll rocks: ........#. with width 10
+Roll rocks: O..#.OO... with width 10
+Roll rocks: OO..O##..O with width 10
+Roll rocks: OO..#....# with width 10
+Roll rocks: OOOO.#.O.. with width 10
+Transpose
+Rows=10 cols=10 len(slice)=10
+#....#.... ##OO..OOOO
+#....###.. .......OOO
+O......... ....#..O.O
+O....#OO.. ......#..O
+..#....#.# ......O.#.
+........#. ##.#..O#.#
+O..#OO.... .#.O...#.O
+OOO..##O.. .#.O#..O..
+OO..#....# .....#....
+OOOO.#O... ....#...#.
+Rotate 90 degrees
+##OO..OOOO => ....#....#
+.......OOO => ..###....#
+....#..O.O => .........O
+......#..O => ..OO#....O
+......O.#. => #.#....#..
+##.#..O#.# => .#........
+.#.O...#.O => ....OO#..O
+.#.O#..O.. => ..O##..OOO
+.....#.... => #....#..OO
+....#...#. => ...O#.OOOO
+Subcycle Result:
+##....OOOO => ....#....#
+.......OOO => ..###....#
+..OO#....O => .........O
+......#..O => ..OO#....O
+.......O#. => #.#....#..
+##.#..O#.# => .#........
+.#....O#.. => ....OO#..O
+.#.O#....O => ..O##..OOO
+.....#.... => #....#..OO
+...O#..O#. => ...O#.OOOO
+
+Run Subcycle
+Transpose
+Rows=10 cols=10 len(slice)=10
+....#....# ....#...#.
+..###....# .....#....
+.........O .#.O#..O..
+..OO#....O .#.O...#.O
+#.#....#.. ##.#..O#.#
+.#........ ......O.#.
+....OO#..O ......#..O
+..O##..OOO ....#..O.O
+#....#..OO .......OOO
+...O#.OOOO ##OO..OOOO
+Roll rocks: ....#...#. with width 10
+Roll rocks: .....#.... with width 10
+Roll rocks: .#.O#..O.. with width 10
+Roll rocks: .#.O...#.O with width 10
+Roll rocks: ##.#..O#.# with width 10
+Roll rocks: ......O.#. with width 10
+Roll rocks: ......#..O with width 10
+Roll rocks: ....#..O.O with width 10
+Roll rocks: .......OOO with width 10
+Roll rocks: ##OO..OOOO with width 10
+Transpose
+Rows=10 cols=10 len(slice)=10
+....#...#. ....#O..O#
+.....#.... ..###...O#
+.#O.#O.... ..OO....OO
+.#O....#O. ....#....O
+##.#O..#.# #.#.O..#.O
+O.......#. .#O....O.O
+......#O.. ......#O.O
+....#OO... ...##.O..O
+OOO....... #..O.#....
+##OOOOOO.. ....#.....
+Rotate 90 degrees
+....#O..O# => .#...#....
+..###...O# => ....#.....
+..OO....OO => ....O#.O#.
+....#....O => .O#....O#.
+#.#.O..#.O => #.#..O#.##
+.#O....O.O => .#.......O
+......#O.O => ..O#......
+...##.O..O => ...OO#....
+#..O.#.... => .......OOO
+....#..... => ..OOOOOO##
+Subcycle Result:
+....#....# => .#...#....
+..###....# => ....#.....
+.........O => ....O#.O#.
+..OO#....O => .O#....O#.
+#.#....#.. => #.#..O#.##
+.#........ => .#.......O
+....OO#..O => ..O#......
+..O##..OOO => ...OO#....
+#....#..OO => .......OOO
+...O#.OOOO => ..OOOOOO##
+
+Run Subcycle
+Transpose
+Rows=10 cols=10 len(slice)=10
+.#...#.... ....#.....
+....#..... #..O.#....
+....O#.O#. ...##.O..O
+.O#....O#. ......#O.O
+#.#..O#.## .#O....O.O
+.#.......O #.#.O..#.O
+..O#...... ....#....O
+...OO#.... ..OO....OO
+.......OOO ..###...O#
+..OOOOOO## ....#O..O#
+Roll rocks: ....#..... with width 10
+Roll rocks: #..O.#.... with width 10
+Roll rocks: ...##.O..O with width 10
+Roll rocks: ......#O.O with width 10
+Roll rocks: .#O....O.O with width 10
+Roll rocks: #.#.O..#.O with width 10
+Roll rocks: ....#....O with width 10
+Roll rocks: ..OO....OO with width 10
+Roll rocks: ..###...O# with width 10
+Roll rocks: ....#O..O# with width 10
+Transpose
+Rows=10 cols=10 len(slice)=10
+....#..... .#...#.O..
+#O...#.... .O..#..O..
+...##OO... ....O#.O#.
+......#OO. ..#.OO.O#.
+.#OOO..... #.#.O.#.##
+#.#O...#O. .#O...O.OO
+....#O.... ..O#.....O
+OOOO...... ...O.#....
+..###O...# ...O.O....
+....#OO..# ........##
+Rotate 90 degrees
+.#...#.O.. => .....#....
+.O..#..O.. => ....#...O#
+....O#.O#. => ...OO##...
+..#.OO.O#. => .OO#......
+#.#.O.#.## => .....OOO#.
+.#O...O.OO => .O#...O#.#
+..O#.....O => ....O#....
+...O.#.... => ......OOOO
+...O.O.... => #...O###..
+........## => #..OO#....
+Subcycle Result:
+.#...#.... => .....#....
+....#..... => ....#...O#
+....O#.O#. => ...OO##...
+.O#....O#. => .OO#......
+#.#..O#.## => .....OOO#.
+.#.......O => .O#...O#.#
+..O#...... => ....O#....
+...OO#.... => ......OOOO
+.......OOO => #...O###..
+..OOOOOO## => #..OO#....
+
+Run Subcycle
+Transpose
+Rows=10 cols=10 len(slice)=10
+.....#.... ........##
+....#...O# ...O.O....
+...OO##... ...O.#....
+.OO#...... ..O#.....O
+.....OOO#. .#O...O.OO
+.O#...O#.# #.#.O.#.##
+....O#.... ..#.OO.O#.
+......OOOO ....O#.O#.
+#...O###.. .O..#..O..
+#..OO#.... .#...#.O..
+Roll rocks: ........## with width 10
+Roll rocks: ...O.O.... with width 10
+Roll rocks: ...O.#.... with width 10
+Roll rocks: ..O#.....O with width 10
+Roll rocks: .#O...O.OO with width 10
+Roll rocks: #.#.O.#.## with width 10
+Roll rocks: ..#.OO.O#. with width 10
+Roll rocks: ....O#.O#. with width 10
+Roll rocks: .O..#..O.. with width 10
+Roll rocks: .#...#.O.. with width 10
+Transpose
+Rows=10 cols=10 len(slice)=10
+........## .OOO.#.OO.
+OO........ .O..#....#
+O....#.... ....O##...
+O..#O..... ...#OOO...
+.#OOOO.... ...OO.O.#.
+#.#O..#.## ..#.O.O#O#
+..#OOO..#. .....#.O.O
+O....#O.#. ..........
+O...#O.... #....###..
+.#...#O... #....#....
+Rotate 90 degrees
+.OOO.#.OO. => ##........
+.O..#....# => ........OO
+....O##... => ....#....O
+...#OOO... => .....O#..O
+...OO.O.#. => ....OOOO#.
+..#.O.O#O# => ##.#..O#.#
+.....#.O.O => .#..OOO#..
+.......... => .#.O#....O
+#....###.. => ....O#...O
+#....#.... => ...O#...#.
+Subcycle Result:
+.....#.... => ##........
+....#...O# => ........OO
+...OO##... => ....#....O
+.OO#...... => .....O#..O
+.....OOO#. => ....OOOO#.
+.O#...O#.# => ##.#..O#.#
+....O#.... => .#..OOO#..
+......OOOO => .#.O#....O
+#...O###.. => ....O#...O
+#..OO#.... => ...O#...#.
+
+Run Subcycle
+Transpose
+Rows=10 cols=10 len(slice)=10
+##........ #....#....
+........OO #....###..
+....#....O ..........
+.....O#..O .....#.O.O
+....OOOO#. ..#.O.O#O#
+##.#..O#.# ...OO.O.#.
+.#..OOO#.. ...#OOO...
+.#.O#....O ....O##...
+....O#...O .O..#....#
+...O#...#. .OOO.#.OO.
+Roll rocks: #....#.... with width 10
+Roll rocks: #....###.. with width 10
+Roll rocks: .......... with width 10
+Roll rocks: .....#.O.O with width 10
+Roll rocks: ..#.O.O#O# with width 10
+Roll rocks: ...OO.O.#. with width 10
+Roll rocks: ...#OOO... with width 10
+Roll rocks: ....O##... with width 10
+Roll rocks: .O..#....# with width 10
+Roll rocks: .OOO.#.OO. with width 10
+Transpose
+Rows=10 cols=10 len(slice)=10
+#....#.... ##...O.OOO
+#....###.. .....O...O
+.......... ....#O...O
+.....#OO.. ....O.#...
+..#OO..#O# ....O.O.#.
+OOO.....#. ##.#..O#.#
+...#OOO... .#.O..O#.O
+O....##... .#.O#....O
+O...#....# ....O#....
+OOO..#OO.. ....#...#.
+Rotate 90 degrees
+##...O.OOO => ....#....#
+.....O...O => ..###....#
+....#O...O => ..........
+....O.#... => ..OO#.....
+....O.O.#. => #O#..OO#..
+##.#..O#.# => .#.....OOO
+.#.O..O#.O => ...OOO#...
+.#.O#....O => ...##....O
+....O#.... => #....#...O
+....#...#. => ..OO#..OOO
+Subcycle Result:
+##........ => ....#....#
+........OO => ..###....#
+....#....O => ..........
+.....O#..O => ..OO#.....
+....OOOO#. => #O#..OO#..
+##.#..O#.# => .#.....OOO
+.#..OOO#.. => ...OOO#...
+.#.O#....O => ...##....O
+....O#...O => #....#...O
+...O#...#. => ..OO#..OOO
+
+Run Subcycle
+Transpose
+Rows=10 cols=10 len(slice)=10
+....#....# ....#...#.
+..###....# ....O#....
+.......... .#.O#....O
+..OO#..... .#.O..O#.O
+#O#..OO#.. ##.#..O#.#
+.#.....OOO ....O.O.#.
+...OOO#... ....O.#...
+...##....O ....#O...O
+#....#...O .....O...O
+..OO#..OOO ##...O.OOO
+Roll rocks: ....#...#. with width 10
+Roll rocks: ....O#.... with width 10
+Roll rocks: .#.O#....O with width 10
+Roll rocks: .#.O..O#.O with width 10
+Roll rocks: ##.#..O#.# with width 10
+Roll rocks: ....O.O.#. with width 10
+Roll rocks: ....O.#... with width 10
+Roll rocks: ....#O...O with width 10
+Roll rocks: .....O...O with width 10
+Roll rocks: ##...O.OOO with width 10
+Transpose
+Rows=10 cols=10 len(slice)=10
+....#...#. .O..#OO.O#
+O....#.... ..###O..O#
+.#O.#O.... ..OO.....O
+.#OO...#O. ...O#....O
+##.#O..#.# #.#.O..#.O
+OO......#. .#O....O.O
+O.....#... ......#O..
+....#OO... ...##.....
+OO........ #..O.#....
+##OOOO.... ....#.....
+Rotate 90 degrees
+.O..#OO.O# => .#...#....
+..###O..O# => ....#....O
+..OO.....O => ....O#.O#.
+...O#....O => .O#...OO#.
+#.#.O..#.O => #.#..O#.##
+.#O....O.O => .#......OO
+......#O.. => ...#.....O
+...##..... => ...OO#....
+#..O.#.... => ........OO
+....#..... => ....OOOO##
+Subcycle Result:
+....#....# => .#...#....
+..###....# => ....#....O
+.......... => ....O#.O#.
+..OO#..... => .O#...OO#.
+#O#..OO#.. => #.#..O#.##
+.#.....OOO => .#......OO
+...OOO#... => ...#.....O
+...##....O => ...OO#....
+#....#...O => ........OO
+..OO#..OOO => ....OOOO##
+
+Run Subcycle
+Transpose
+Rows=10 cols=10 len(slice)=10
+.#...#.... ....#.....
+....#....O #..O.#....
+....O#.O#. ...##.....
+.O#...OO#. ......#O..
+#.#..O#.## .#O....O.O
+.#......OO #.#.O..#.O
+...#.....O ...O#....O
+...OO#.... ..OO.....O
+........OO ..###O..O#
+....OOOO## .O..#OO.O#
+Roll rocks: ....#..... with width 10
+Roll rocks: #..O.#.... with width 10
+Roll rocks: ...##..... with width 10
+Roll rocks: ......#O.. with width 10
+Roll rocks: .#O....O.O with width 10
+Roll rocks: #.#.O..#.O with width 10
+Roll rocks: ...O#....O with width 10
+Roll rocks: ..OO.....O with width 10
+Roll rocks: ..###O..O# with width 10
+Roll rocks: .O..#OO.O# with width 10
+Transpose
+Rows=10 cols=10 len(slice)=10
+....#..... .#...#OO.O
+#O...#.... .O..#..O..
+...##..... ....O#.O#.
+......#O.. ..#.OO..#.
+.#OOO..... #.#.O.#.##
+#.#O...#O. .#....O.OO
+O...#O.... ...#....OO
+OOO....... ...O.#...O
+..###OO..# .....O....
+O...#OOO.# ........##
+Rotate 90 degrees
+.#...#OO.O => .....#....
+.O..#..O.. => ....#...O#
+....O#.O#. => .....##...
+..#.OO..#. => ..O#......
+#.#.O.#.## => .....OOO#.
+.#....O.OO => .O#...O#.#
+...#....OO => ....O#...O
+...O.#...O => .......OOO
+.....O.... => #..OO###..
+........## => #.OOO#...O
+Subcycle Result:
+.#...#.... => .....#....
+....#....O => ....#...O#
+....O#.O#. => .....##...
+.O#...OO#. => ..O#......
+#.#..O#.## => .....OOO#.
+.#......OO => .O#...O#.#
+...#.....O => ....O#...O
+...OO#.... => .......OOO
+........OO => #..OO###..
+....OOOO## => #.OOO#...O
+
+Run Subcycle
+Transpose
+Rows=10 cols=10 len(slice)=10
+.....#.... ........##
+....#...O# .....O....
+.....##... ...O.#...O
+..O#...... ...#....OO
+.....OOO#. .#....O.OO
+.O#...O#.# #.#.O.#.##
+....O#...O ..#.OO..#.
+.......OOO ....O#.O#.
+#..OO###.. .O..#..O..
+#.OOO#...O .#...#OO.O
+Roll rocks: ........## with width 10
+Roll rocks: .....O.... with width 10
+Roll rocks: ...O.#...O with width 10
+Roll rocks: ...#....OO with width 10
+Roll rocks: .#....O.OO with width 10
+Roll rocks: #.#.O.#.## with width 10
+Roll rocks: ..#.OO..#. with width 10
+Roll rocks: ....O#.O#. with width 10
+Roll rocks: .O..#..O.. with width 10
+Roll rocks: .#...#OO.O with width 10
+Transpose
+Rows=10 cols=10 len(slice)=10
+........## .OO..#.OO.
+O......... ....#....#
+O....#O... ....O##...
+...#OO.... ...#OOO...
+.#OOO..... ...OO.O.#.
+#.#O..#.## ..#O...#O#
+..#OO...#. ..O..#.O.O
+O....#O.#. .........O
+O...#O.... #....###.O
+.#...#OOO. #....#....
+Rotate 90 degrees
+.OO..#.OO. => ##........
+....#....# => .........O
+....O##... => ...O#....O
+...#OOO... => ....OO#...
+...OO.O.#. => .....OOO#.
+..#O...#O# => ##.#..O#.#
+..O..#.O.O => .#...OO#..
+.........O => .#.O#....O
+#....###.O => ....O#...O
+#....#.... => .OOO#...#.
+Subcycle Result:
+.....#.... => ##........
+....#...O# => .........O
+.....##... => ...O#....O
+..O#...... => ....OO#...
+.....OOO#. => .....OOO#.
+.O#...O#.# => ##.#..O#.#
+....O#...O => .#...OO#..
+.......OOO => .#.O#....O
+#..OO###.. => ....O#...O
+#.OOO#...O => .OOO#...#.
+
+Run Subcycle
+Transpose
+Rows=10 cols=10 len(slice)=10
+##........ #....#....
+.........O #....###.O
+...O#....O .........O
+....OO#... ..O..#.O.O
+.....OOO#. ..#O...#O#
+##.#..O#.# ...OO.O.#.
+.#...OO#.. ...#OOO...
+.#.O#....O ....O##...
+....O#...O ....#....#
+.OOO#...#. .OO..#.OO.
+Roll rocks: #....#.... with width 10
+Roll rocks: #....###.O with width 10
+Roll rocks: .........O with width 10
+Roll rocks: ..O..#.O.O with width 10
+Roll rocks: ..#O...#O# with width 10
+Roll rocks: ...OO.O.#. with width 10
+Roll rocks: ...#OOO... with width 10
+Roll rocks: ....O##... with width 10
+Roll rocks: ....#....# with width 10
+Roll rocks: .OO..#.OO. with width 10
+Transpose
+Rows=10 cols=10 len(slice)=10
+#....#.... ##OO.O.O.O
+#....###O. .....O...O
+O......... ....#O....
+O....#OO.. ....O.#...
+..#O...#O# ......O.#.
+OOO.....#. ##.#..O#.#
+...#OOO... .#.O..O#.O
+O....##... .#.O#....O
+....#....# .O..O#....
+OO...#OO.. ....#...#.
+Rotate 90 degrees
+##OO.O.O.O => ....#....#
+.....O...O => .O###....#
+....#O.... => .........O
+....O.#... => ..OO#....O
+......O.#. => #O#...O#..
+##.#..O#.# => .#.....OOO
+.#.O..O#.O => ...OOO#...
+.#.O#....O => ...##....O
+.O..O#.... => #....#....
+....#...#. => ..OO#...OO
+Subcycle Result:
+##........ => ....#....#
+.........O => .O###....#
+...O#....O => .........O
+....OO#... => ..OO#....O
+.....OOO#. => #O#...O#..
+##.#..O#.# => .#.....OOO
+.#...OO#.. => ...OOO#...
+.#.O#....O => ...##....O
+....O#...O => #....#....
+.OOO#...#. => ..OO#...OO
+
+Run Subcycle
+Transpose
+Rows=10 cols=10 len(slice)=10
+....#....# ....#...#.
+.O###....# .O..O#....
+.........O .#.O#....O
+..OO#....O .#.O..O#.O
+#O#...O#.. ##.#..O#.#
+.#.....OOO ......O.#.
+...OOO#... ....O.#...
+...##....O ....#O....
+#....#.... .....O...O
+..OO#...OO ##OO.O.O.O
+Roll rocks: ....#...#. with width 10
+Roll rocks: .O..O#.... with width 10
+Roll rocks: .#.O#....O with width 10
+Roll rocks: .#.O..O#.O with width 10
+Roll rocks: ##.#..O#.# with width 10
+Roll rocks: ......O.#. with width 10
+Roll rocks: ....O.#... with width 10
+Roll rocks: ....#O.... with width 10
+Roll rocks: .....O...O with width 10
+Roll rocks: ##OO.O.O.O with width 10
+Transpose
+Rows=10 cols=10 len(slice)=10
+....#...#. .O..#OO.O#
+OO...#.... .O###...O#
+.#O.#O.... ..OO.....O
+.#OO...#O. ...O#....O
+##.#O..#.# #.#.O..#.O
+O.......#. .#O....O.O
+O.....#... ......#..O
+....#O.... ...##.....
+OO........ #..O.#....
+##OOOOO... ....#.....
+Rotate 90 degrees
+.O..#OO.O# => .#...#....
+.O###...O# => ....#...OO
+..OO.....O => ....O#.O#.
+...O#....O => .O#...OO#.
+#.#.O..#.O => #.#..O#.##
+.#O....O.O => .#.......O
+......#..O => ...#.....O
+...##..... => ....O#....
+#..O.#.... => ........OO
+....#..... => ...OOOOO##
+Subcycle Result:
+....#....# => .#...#....
+.O###....# => ....#...OO
+.........O => ....O#.O#.
+..OO#....O => .O#...OO#.
+#O#...O#.. => #.#..O#.##
+.#.....OOO => .#.......O
+...OOO#... => ...#.....O
+...##....O => ....O#....
+#....#.... => ........OO
+..OO#...OO => ...OOOOO##
+
+Run Subcycle
+Transpose
+Rows=10 cols=10 len(slice)=10
+.#...#.... ....#.....
+....#...OO #..O.#....
+....O#.O#. ...##.....
+.O#...OO#. ......#..O
+#.#..O#.## .#O....O.O
+.#.......O #.#.O..#.O
+...#.....O ...O#....O
+....O#.... ..OO.....O
+........OO .O###...O#
+...OOOOO## .O..#OO.O#
+Roll rocks: ....#..... with width 10
+Roll rocks: #..O.#.... with width 10
+Roll rocks: ...##..... with width 10
+Roll rocks: ......#..O with width 10
+Roll rocks: .#O....O.O with width 10
+Roll rocks: #.#.O..#.O with width 10
+Roll rocks: ...O#....O with width 10
+Roll rocks: ..OO.....O with width 10
+Roll rocks: .O###...O# with width 10
+Roll rocks: .O..#OO.O# with width 10
+Transpose
+Rows=10 cols=10 len(slice)=10
+....#..... .#...#OOOO
+#O...#.... .O..#..O..
+...##..... ....O#.O#.
+......#O.. ..#.OO..#.
+.#OOO..... #.#.O.#.##
+#.#O...#O. .#....O.OO
+O...#O.... ...#.....O
+OOO....... ...O.#...O
+O.###O...# .....O....
+O...#OOO.# ........##
+Rotate 90 degrees
+.#...#OOOO => .....#....
+.O..#..O.. => ....#...O#
+....O#.O#. => .....##...
+..#.OO..#. => ..O#......
+#.#.O.#.## => .....OOO#.
+.#....O.OO => .O#...O#.#
+...#.....O => ....O#...O
+...O.#...O => .......OOO
+.....O.... => #...O###.O
+........## => #.OOO#...O
+Subcycle Result:
+.#...#.... => .....#....
+....#...OO => ....#...O#
+....O#.O#. => .....##...
+.O#...OO#. => ..O#......
+#.#..O#.## => .....OOO#.
+.#.......O => .O#...O#.#
+...#.....O => ....O#...O
+....O#.... => .......OOO
+........OO => #...O###.O
+...OOOOO## => #.OOO#...O
+
+Transpose
+Rows=10 cols=10 len(slice)=10
+.....#.... ........##
+....#...O# .....O....
+.....##... ...O.#...O
+..O#...... ...#.....O
+.....OOO#. .#....O.OO
+.O#...O#.# #.#.O.#.##
+....O#...O ..#.OO..#.
+.......OOO ....O#.O#.
+#...O###.O .O..#..O..
+#.OOO#...O .#...#OOOO
+Calculate load: ........## with width=10
+Calculate load: .....O.... with width=10
+Calculate load: ...O.#...O with width=10
+Calculate load: ...#.....O with width=10
+Calculate load: .#....O.OO with width=10
+Calculate load: #.#.O.#.## with width=10
+Calculate load: ..#.OO..#. with width=10
+Calculate load: ....O#.O#. with width=10
+Calculate load: .O..#..O.. with width=10
+Calculate load: .#...#OOOO with width=10
+.....#....
+....#...O#
+.....##...
+..O#......
+.....OOO#.
+.O#...O#.#
+....O#...O
+.......OOO
+#...O###.O
+#.OOO#...O
+
+Final results: 69
+

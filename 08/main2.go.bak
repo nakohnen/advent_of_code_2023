@@ -1,0 +1,189 @@
+package main
+
+import (
+	"fmt"
+	"os"
+	"strings"
+	//"unicode"
+	//	"math"
+	//"sort"
+	"strconv"
+	"sync"
+)
+
+func check(e error) {
+	if e != nil {
+		panic(e)
+	}
+}
+
+func toInt(val string) int {
+	v, err := strconv.Atoi(val)
+	check(err)
+	return v
+}
+
+func hasPrefix(line string, sub string) bool {
+	if len(line) < len(sub) {
+		return false
+	}
+	return line[0:len(sub)] == sub
+}
+
+func hasSuffix(line string, sub string) bool {
+	if len(line) < len(sub) {
+		return false
+	}
+	res := line[len(line)-len(sub):] == sub
+	//fmt.Printf("line=%v suffix=%v sub=%v => %v\n", line, line[len(line)-len(sub):], sub, res)
+	return res
+}
+
+func replaceCharacters(line string, rem string, rep string) string {
+	result := line
+	for _, c := range rem {
+		result = strings.ReplaceAll(result, string(c), rep)
+	}
+	return result
+}
+
+func allEndIn(lines []string, suffix string) bool {
+	for _, l := range lines {
+		if hasSuffix(l, suffix) == false {
+			return false
+		}
+	}
+	return true
+}
+
+func oneEndIn(lines []string, suffix string) bool {
+	for _, l := range lines {
+		if hasSuffix(l, suffix) {
+			return true
+		}
+	}
+	return false
+}
+
+func concatInstructions(nodes []string, ins string) string {
+	return strings.Join(nodes, "") + ins
+}
+
+func mapFunc(input string, nodeMap map[string][2]string, index int) string {
+	return nodeMap[input][index]
+}
+
+func allEndNodes(nodes []string, end_nodes map[string]bool) bool {
+    for _, n := range nodes {
+        if !end_nodes[n] {
+            return false
+        }
+    }
+    return true
+}
+
+func main() {
+	// Check if an argument is provided
+	if len(os.Args) < 2 {
+		fmt.Println("Please provide a filename")
+		os.Exit(1)
+	}
+
+	// The second element in os.Args is the first argument
+	filename := os.Args[1]
+
+	//dat, err := os.ReadFile("input_sample.txt")
+	dat, err := os.ReadFile(filename)
+	//dat, err := os.ReadFile("input.txt")
+	check(err)
+
+	node_map := make(map[string][2]string)
+	instructions := ""
+	starting_nodes := []string{}
+    end_nodes := make(map[string]bool)
+	for n, line := range strings.Split(strings.TrimSpace(string(dat)), "\n") {
+		if n == 0 {
+			instructions = line
+			fmt.Printf("instructions %v\n", len(instructions))
+		} else if n >= 2 {
+			// ZZZ = (ZZZ, ZZZ)
+			edited := line
+			edited = replaceCharacters(edited, " ()", "")
+			edited = replaceCharacters(edited, ",", "=")
+			elements := strings.Split(edited, "=")
+			node_map[elements[0]] = [2]string{elements[1], elements[2]}
+			if hasSuffix(elements[0], "A") {
+				starting_nodes = append(starting_nodes, elements[0])
+			}
+            for _, s := range elements {
+                if hasSuffix(s, "Z") {
+                    end_nodes[s] = true
+                }
+            }
+			fmt.Printf("->%v\n", elements)
+		}
+	}
+
+	cur_nodes := starting_nodes
+	instruction_counter := 0
+	steps := 0
+
+	//config := make(map[string]bool)
+	//config[concatInstructions(cur_nodes, string(instructions[0]))] = true
+
+	fmt.Printf("Starting nodes %v\n", cur_nodes)
+	for !allEndNodes(cur_nodes, end_nodes) {
+		next_index := 1
+		if instructions[instruction_counter] == 'L' {
+			next_index = 0
+		}
+
+		var wg sync.WaitGroup
+		results := make(chan string, len(cur_nodes))
+
+		for i := 0; i < len(cur_nodes); i++ {
+			wg.Add(1)
+			go func(s string) {
+				defer wg.Done()
+				results <- mapFunc(s, node_map, next_index)
+			}(cur_nodes[i])
+		}
+
+		// Wait for all goroutines to finish
+		wg.Wait()
+		close(results)
+
+		cur_nodes = []string{}
+		for result := range results {
+			cur_nodes = append(cur_nodes, result)
+		}
+
+		//concated := concatInstructions(cur_nodes, string(instructions[instruction_counter]))
+		//if config[concated] {
+		//    panic("We fell on a know field. This loops infinitely")
+		//    break
+		//} else {
+		//    config[concated] = true
+		//}
+
+		steps++
+		//		if oneEndIn(cur_nodes, "Z") {
+		//			fmt.Printf("%v: %v=%v %v ends in Z\n", steps, instruction_counter,
+		//				string(instructions[instruction_counter]), cur_nodes)
+		//           break
+		//		} else {
+		//			fmt.Printf("%v: %v=%v %v\n", steps, instruction_counter,
+		//				string(instructions[instruction_counter]), cur_nodes)
+		//		}
+		instruction_counter++
+		if instruction_counter >= len(instructions) {
+			instruction_counter = 0
+		}
+		//    	fmt.Print("\033[1A") // Move up
+		//fmt.Print("\033[K")  // Clear line
+		//fmt.Printf("nodes: %v => steps=%v\n", cur_nodes, steps)
+
+	}
+	fmt.Printf("steps=%v\n", steps)
+	fmt.Println("")
+}

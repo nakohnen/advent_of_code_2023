@@ -1,0 +1,63 @@
+>t
+>t
+>tw
+>2
+<e
+<ne
+<ine
+<9
+> two1nine 29 29
+>e
+>ei
+>eig
+>eigh
+>8
+<e
+<ee
+<ree
+<hree
+<3
+> eightwothree 83 112
+>a
+>ab
+>abc
+>abco
+>abcon
+>abc1
+<z
+<yz
+<xyz
+<exyz
+<eexyz
+<reexyz
+<hreexyz
+<3xyz
+> abcone2threexyz 13 125
+>x
+>xt
+>xtw
+>x2
+<r
+<ur
+<our
+<4
+> xtwone3four 24 149
+>4
+<2
+> 4nineeightseven2 42 191
+>z
+>zo
+>zon
+>z1
+<4
+> zoneight234 14 205
+>7
+<n
+<en
+<een
+<teen
+<xteen
+<ixteen
+<6teen
+> 7pqrstsixteen 76 281
+>  0 281

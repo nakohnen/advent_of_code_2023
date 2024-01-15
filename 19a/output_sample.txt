@@ -1,0 +1,49 @@
+Debug enabled
+px{a<2006:qkq,m>2090:A,rfg}
+pv{a>1716:R,A}
+lnx{m>1548:A,A}
+rfg{s<537:gd,x>2440:R,A}
+qs{s>3448:A,lnx}
+qkq{x<1416:A,crn}
+crn{x>2662:A,R}
+in{s<1351:px,qqz}
+qqz{s>2770:qs,m<1801:hdj,R}
+gd{a>3333:R,R}
+hdj{m>838:A,pv}
+{x=787,m=2655,a=1222,s=2876}
+{x=1679,m=44,a=2067,s=496}
+{x=2036,m=264,a=79,s=2244}
+{x=2461,m=1339,a=466,s=291}
+{x=2127,m=1623,a=2188,s=1013}
+in: No rule [{s < 1351 px}] catched {787 2655 1222 2876} gear.
+qqz: Rule {s > 2770 qs} catched {787 2655 1222 2876} gear.
+qs: No rule [{s > 3448 A}] catched {787 2655 1222 2876} gear.
+lnx: Rule {m > 1548 A} catched {787 2655 1222 2876} gear.
+A gear ended in a end pile.
+in: Rule {s < 1351 px} catched {1679 44 2067 496} gear.
+px: No rule [{a < 2006 qkq} {m > 2090 A}] catched {1679 44 2067 496} gear.
+rfg: Rule {s < 537 gd} catched {1679 44 2067 496} gear.
+in: No rule [{s < 1351 px}] catched {2036 264 79 2244} gear.
+gd: No rule [{a > 3333 R}] catched {1679 44 2067 496} gear.
+A gear ended in a end pile.
+in: Rule {s < 1351 px} catched {2461 1339 466 291} gear.
+in: Rule {s < 1351 px} catched {2127 1623 2188 1013} gear.
+qqz: Rule {m < 1801 hdj} catched {2036 264 79 2244} gear.
+hdj: No rule [{m > 838 A}] catched {2036 264 79 2244} gear.
+pv: No rule [{a > 1716 R}] catched {2036 264 79 2244} gear.
+A gear ended in a end pile.
+px: Rule {a < 2006 qkq} catched {2461 1339 466 291} gear.
+px: No rule [{a < 2006 qkq} {m > 2090 A}] catched {2127 1623 2188 1013} gear.
+rfg: No rule [{s < 537 gd} {x > 2440 R}] catched {2127 1623 2188 1013} gear.
+A gear ended in a end pile.
+qkq: No rule [{x < 1416 A}] catched {2461 1339 466 291} gear.
+crn: No rule [{x > 2662 A}] catched {2461 1339 466 291} gear.
+A gear ended in a end pile.
+panic: send on closed channel
+
+goroutine 23 [running]:
+main.workWorkflow({0xc000190077, 0x3}, 0x0?, {0xc000182280, 0x1, 0x1}, {0xc00018009d, 0x1}, 0x0?, 0xc000180100)
+	/home/lobo/OneDrive/projects/advent_of_code_2023/19a/main.go:163 +0x8b
+created by main.main in goroutine 1
+	/home/lobo/OneDrive/projects/advent_of_code_2023/19a/main.go:249 +0x706
+exit status 2

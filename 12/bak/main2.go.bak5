@@ -1,0 +1,408 @@
+package main
+
+import (
+	"fmt"
+	"os"
+	"strings"
+	"sync"
+
+	//"unicode"
+	//	"math"
+	//"sort"
+	"strconv"
+	//"sync"
+)
+
+const debug bool = false
+
+func check(e error) {
+	if e != nil {
+		panic(e)
+	}
+}
+
+func toInt(val string) int {
+	v, err := strconv.Atoi(val)
+	check(err)
+	return v
+}
+
+func abs(x int) int {
+	if x < 0 {
+		return -x
+	}
+	return x
+}
+
+func hasPrefix(line string, sub string) bool {
+	if len(line) < len(sub) {
+		return false
+	}
+	return line[0:len(sub)] == sub
+}
+
+func replaceCharacters(line string, rem string, rep string) string {
+	result := line
+	for _, c := range rem {
+		result = strings.ReplaceAll(result, string(c), rep)
+	}
+	return result
+}
+
+// allElementsSame checks if all elements of the slice are the same
+func allElementsSame(slice []int) bool {
+	if len(slice) == 0 {
+		return true // Optionally, define behavior for empty slices
+	}
+
+	firstElement := slice[0]
+	for _, element := range slice {
+		if element != firstElement {
+			return false
+		}
+	}
+	return true
+}
+
+func countConseqChar(spring string, char rune) int {
+	start := false
+	res := 0
+	for _, r := range spring {
+		if r == char {
+			if !start {
+				start = true
+			}
+			res++
+		} else if r != char {
+			if start {
+				return res
+			}
+		}
+	}
+	return res
+
+}
+
+func countChar(spring string, char rune) int {
+	res := 0
+	for _, r := range spring {
+		if r == char {
+			res++
+		}
+	}
+	return res
+}
+
+func checkCorrectness(spring string, config []int) bool {
+	sum_c := 0
+    max_c := 0
+	for _, v := range config {
+		sum_c += v
+        if v > max_c {
+            max_c = v
+        }
+	}
+	if countChar(spring, '#')+countChar(spring, '?') < sum_c {
+		return false
+	}
+	if countChar(spring, '#') > sum_c {
+		return false
+	}
+    
+
+	no_q_marks := true
+	for _, r := range spring {
+		if r == '?' {
+			no_q_marks = false
+			break
+		}
+	}
+
+	spring_split := strings.Split(spring, ".")
+	if no_q_marks {
+		p_config := []int{}
+		for _, s := range spring_split {
+			if len(s) > 0 {
+				p_config = append(p_config, len(s))
+			}
+		}
+		if len(p_config) == len(config) {
+			for i := 0; i < len(config); i++ {
+				if p_config[i] != config[i] {
+					return false
+				}
+			}
+			return true
+		}
+		return false
+	} else {
+		// Lets check if the first filled blocks are correct
+		filled := []string{}
+		for _, s := range spring_split {
+			if len(s) > 0 {
+				if countChar(s, '?') == 0 {
+					filled = append(filled, s)
+				} else {
+					break
+				}
+			}
+		}
+		for i := 0; i < min(len(filled), len(config)); i++ {
+            count := len(filled[i])
+			if config[i] != count || count > max_c {
+                if debug {
+				    fmt.Printf("%v %v is invalid. ", filled, config)
+                }
+				return false
+			}
+		}
+
+        new_spring3 := replaceCharacters(spring, "?", ".")
+        for _, s := range strings.Split(new_spring3, ".") {
+            if len(s) > max_c {
+                return false
+            }
+        }
+	}
+
+	return true
+}
+
+func sumIntSlice(slice []int) int {
+	res := 0
+	for _, v := range slice {
+		res += v
+	}
+	return res
+}
+
+type Possibility struct {
+    values []int
+    count int
+}
+
+func equal(a, b []int) bool {
+    if len(a) != len(b) {
+        return false
+    }
+    for i:=0;i<len(b);i++ {
+        if a[i] != b[i] {
+            return false
+        }
+    }
+    return true
+}
+
+func getUniqueIntSlices(input [][]int) [][]int {
+    result := [][]int{}
+    for _, slice := range input {
+        found := false 
+        for _, r_slice := range result {
+            if equal(slice, r_slice) {
+                found = true
+            }
+        }
+        if !found {
+            result = append(result, slice)
+        }
+    }
+    return result
+}
+
+func getUniqueIntValues(input []int) []int {
+    seen := make(map[int]bool)
+    res := []int{}
+    for _, i := range input {
+        if !seen[i] {
+            res = append(res, i)
+            seen[i] = true
+        }
+    }
+    return res
+}
+
+func mergePossibilites(ps []Possibility) []Possibility {
+    values := [][]int{}
+
+    for _, p := range ps {
+        found := false
+        for _, v := range values {
+            if equal(v, p.values) {
+                found = true
+            }
+        }
+        if !found  {
+            values = append(values, p.values)
+        }
+    }
+    
+    result := []Possibility{}
+    // Now we have a set of unique int slices
+    for _, comb := range values {
+        count := 0
+        for _, p := range ps {
+            if equal(comb, p.values) {
+                count += p.count
+            }
+        }
+
+        new_p := Possibility{
+            values: comb,
+            count: count,
+        }
+        result = append(result, new_p)
+    }
+    return result
+}
+
+func substractPossibilites(a, b []Possibility) []Possibility {
+    if len(a) < len(b) {
+        panic("We have incompatible possiblites")
+    }
+    for _, a_pos := range a {
+        for _, b_pos := range b {
+            found := false
+            if equal(a_pos.values, b_pos.values) {
+                a_pos.count -= b_pos.count
+                found = true
+                break
+            }
+            if !found {
+                panic("We substracted from incompatible possibilities")
+            }
+        }
+    }
+    return a
+}
+
+func getAllPossibilites(input string) []Possibility {
+    
+
+
+
+}
+
+
+func constructNewPossibilites(old_s string, old_p []Possibility, new_pos string) []Possibility {
+
+
+}
+
+
+
+func calculatePossibilites(spring string, config []int) int {
+	work := []string{spring}
+	if debug {
+		fmt.Printf("%v with %v\n", spring, config)
+	}
+    result := 0
+	spring_split_tmp := strings.Split(spring, ".")
+    spring_split := []string{}
+    for _, s := range spring_split_tmp {
+        if len(s) > 0 {
+            spring_split = append(spring_split, s)
+        }
+
+    }
+    possibilites := [][]Possibility{}
+    for _, sub := range spring_split {
+        possibilites = append(possibilites, getAllPossibilites(sub))
+    }
+
+
+	if debug {
+		fmt.Println("Possibilites:")
+		fmt.Printf("\t   %v\n", spring)
+		for _, w := range work {
+			fmt.Printf("\t=> %v\n", w)
+		}
+	}
+	fmt.Printf("%v %v => %v\n", spring, config, result)
+	return result
+}
+
+func processWorker(spring string, config []int, resultChan chan<- int, wg *sync.WaitGroup) {
+	defer wg.Done()
+	resultChan <- calculatePossibilites(spring, config)
+}
+
+func multiplyString(s string, times int, join_char rune) string {
+    var builder strings.Builder
+    for i:=0;i<times;i++ {
+        builder.WriteString(s)
+        if join_char != 0 && i<times-1 {
+            builder.WriteRune(join_char)
+        }
+    }
+    return builder.String()
+}
+
+func multiplySlice[T any](slice []T, times int) []T {
+    new_s := []T{}
+    for i:=0;i<times;i++ {
+        new_s = append(new_s, slice...)
+    }
+    return new_s
+}
+
+func main() {
+	// Check if an argument is provided
+	if len(os.Args) < 2 {
+		fmt.Println("Please provide a filename")
+		os.Exit(1)
+	}
+
+	// The second element in os.Args is the first argument
+	filename := os.Args[1]
+
+	dat, err := os.ReadFile(filename)
+	check(err)
+
+	springs := []string{}
+	configs := [][]int{}
+	lines := strings.Split(strings.TrimSpace(string(dat)), "\n")
+	for _, line := range lines {
+		line_split := strings.Split(line, " ")
+        spring := multiplyString(line_split[0], 5, '?')
+		springs = append(springs, spring)
+
+		config := []int{}
+        config_part := multiplyString(line_split[1], 5, ',')
+		for _, val := range strings.Split(config_part, ",") {
+			config = append(config, toInt(val))
+		}
+		configs = append(configs, config)
+		fmt.Printf("%v => %v + %v\n", line, spring, config)
+	}
+
+	results := 0
+	if !debug {
+		resultChan := make(chan int, len(springs))
+		var wg sync.WaitGroup
+
+		for i := 0; i < len(springs); i++ {
+			wg.Add(1)
+			go processWorker(springs[i], configs[i], resultChan, &wg)
+		}
+		fmt.Printf("To work on: %v elements\n", len(springs))
+
+		// Close the channel once all goroutines have finished
+		go func() {
+			wg.Wait()
+			close(resultChan)
+		}()
+
+		// Collect results
+		for result := range resultChan {
+            results += result
+		}
+	} else {
+		for i := 0; i < len(springs); i++ {
+			results += calculatePossibilites(springs[i], configs[i])
+		}
+	}
+
+	fmt.Println("Results:", results)
+
+	fmt.Println("")
+}

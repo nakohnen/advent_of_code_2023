@@ -1,0 +1,72 @@
+fatal error: all goroutines are asleep - deadlock!
+
+goroutine 1 [chan send]:
+main.main()
+	/home/lobo/OneDrive/projects/advent_of_code_2023/19a/main.go:259 +0x9f5
+
+goroutine 18 [chan receive]:
+main.workWorkflow({0xc0001a8000, 0x2}, 0xc000012000?, {0xc000192100, 0x1, 0x1}, {0xc0001b0014, 0x3}, 0xc0000627b8?, 0xc00018a0c0)
+	/home/lobo/OneDrive/projects/advent_of_code_2023/19a/main.go:157 +0x79
+created by main.main in goroutine 1
+	/home/lobo/OneDrive/projects/advent_of_code_2023/19a/main.go:254 +0x71c
+
+goroutine 19 [chan receive]:
+main.workWorkflow({0xc0001a801c, 0x2}, 0x0?, {0x57ea40, 0x0, 0x0}, {0xc00018a04d, 0x1}, 0x0?, 0xc00018a0c0)
+	/home/lobo/OneDrive/projects/advent_of_code_2023/19a/main.go:157 +0x79
+created by main.main in goroutine 1
+	/home/lobo/OneDrive/projects/advent_of_code_2023/19a/main.go:254 +0x71c
+
+goroutine 20 [chan send]:
+main.workWorkflow({0xc0001a802b, 0x3}, 0x0?, {0x57ea40, 0x0, 0x0}, {0xc00018a059, 0x1}, 0x0?, 0xc00018a0c0)
+	/home/lobo/OneDrive/projects/advent_of_code_2023/19a/main.go:165 +0x21f
+created by main.main in goroutine 1
+	/home/lobo/OneDrive/projects/advent_of_code_2023/19a/main.go:254 +0x71c
+
+goroutine 21 [chan receive]:
+main.workWorkflow({0xc0001a803b, 0x3}, 0x0?, {0xc0001921c0, 0x1, 0x1}, {0xc0001b002a, 0x1}, 0x0?, 0xc00018a0c0)
+	/home/lobo/OneDrive/projects/advent_of_code_2023/19a/main.go:157 +0x79
+created by main.main in goroutine 1
+	/home/lobo/OneDrive/projects/advent_of_code_2023/19a/main.go:254 +0x71c
+
+goroutine 22 [chan receive]:
+main.workWorkflow({0xc0001a8054, 0x2}, 0x0?, {0x57ea40, 0x0, 0x0}, {0xc00018a06d, 0x3}, 0x0?, 0xc00018a0c0)
+	/home/lobo/OneDrive/projects/advent_of_code_2023/19a/main.go:157 +0x79
+created by main.main in goroutine 1
+	/home/lobo/OneDrive/projects/advent_of_code_2023/19a/main.go:254 +0x71c
+
+goroutine 23 [chan receive]:
+main.workWorkflow({0xc0001a8065, 0x3}, 0x0?, {0x57ea40, 0x0, 0x0}, {0xc00018a079, 0x3}, 0x0?, 0xc00018a0c0)
+	/home/lobo/OneDrive/projects/advent_of_code_2023/19a/main.go:157 +0x79
+created by main.main in goroutine 1
+	/home/lobo/OneDrive/projects/advent_of_code_2023/19a/main.go:254 +0x71c
+
+goroutine 24 [chan receive]:
+main.workWorkflow({0xc0001a8077, 0x3}, 0x0?, {0x57ea40, 0x0, 0x0}, {0xc00018a089, 0x1}, 0x0?, 0xc00018a0c0)
+	/home/lobo/OneDrive/projects/advent_of_code_2023/19a/main.go:157 +0x79
+created by main.main in goroutine 1
+	/home/lobo/OneDrive/projects/advent_of_code_2023/19a/main.go:254 +0x71c
+
+goroutine 25 [chan send]:
+main.workWorkflow({0xc0001a8087, 0x2}, 0x0?, {0x57ea40, 0x0, 0x0}, {0xc00018a09a, 0x3}, 0x0?, 0xc00018a0c0)
+	/home/lobo/OneDrive/projects/advent_of_code_2023/19a/main.go:165 +0x21f
+created by main.main in goroutine 1
+	/home/lobo/OneDrive/projects/advent_of_code_2023/19a/main.go:254 +0x71c
+
+goroutine 26 [chan send]:
+main.workWorkflow({0xc0001a8099, 0x3}, 0x0?, {0xc000192200, 0x1, 0x1}, {0xc0001b0045, 0x1}, 0x0?, 0xc00018a0c0)
+	/home/lobo/OneDrive/projects/advent_of_code_2023/19a/main.go:165 +0x21f
+created by main.main in goroutine 1
+	/home/lobo/OneDrive/projects/advent_of_code_2023/19a/main.go:254 +0x71c
+
+goroutine 27 [chan receive]:
+main.workWorkflow({0xc0001a80b5, 0x2}, 0x0?, {0x57ea40, 0x0, 0x0}, {0xc00018a0ad, 0x1}, 0x0?, 0xc00018a0c0)
+	/home/lobo/OneDrive/projects/advent_of_code_2023/19a/main.go:157 +0x79
+created by main.main in goroutine 1
+	/home/lobo/OneDrive/projects/advent_of_code_2023/19a/main.go:254 +0x71c
+
+goroutine 28 [chan receive]:
+main.workWorkflow({0xc0001a80c4, 0x3}, 0x0?, {0x57ea40, 0x0, 0x0}, {0xc00018a0b8, 0x2}, 0x0?, 0xc00018a0c0)
+	/home/lobo/OneDrive/projects/advent_of_code_2023/19a/main.go:157 +0x79
+created by main.main in goroutine 1
+	/home/lobo/OneDrive/projects/advent_of_code_2023/19a/main.go:254 +0x71c
+exit status 2
