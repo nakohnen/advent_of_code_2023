@@ -230,32 +230,23 @@ func processSignal(presses int, names []string, forward map[string][]string,
         if types[current.target] == CONJUNCTION && current.highlow == true {
             result = append(result, current)
         }
-
+        others := []Pulse{}
 		switch t := types[name]; t {
 		case UNTYPED:
-			for _, other := range forward[name] {
-				if debug {
-					fmt.Printf("%v -%v-> %v\n", name, current.highlow, other)
-				}
-				to_work = append(to_work, Pulse{name, other, current.highlow})
-			}
+            for _, o := range forward[name] {
+                others = append(others, Pulse{name, o, current.highlow})
+            }
 		case FLIPFLOP:
-			others := processFlipflop(current, forward, states)
-			for _, o := range others {
-				if debug {
-					fmt.Printf("%v -%v-> %v\n", name, current.highlow, o)
-				}
-				to_work = append(to_work, o)
-			}
+			others = processFlipflop(current, forward, states)
 		case CONJUNCTION:
-			others := processConjunction(current, forward, backward, conj_states)
-			for _, o := range others {
-				if debug {
-					fmt.Printf("%v -%v-> %v\n", name, current.highlow, o)
-				}
-				to_work = append(to_work, o)
-			}
+			others = processConjunction(current, forward, backward, conj_states)
 		}
+        for _, o := range others {
+            if debug {
+                fmt.Printf("%v -%v-> %v\n", name, current.highlow, o)
+            }
+            to_work = append(to_work, o)
+        }
 	}
     return result
 }
