@@ -28,75 +28,74 @@ func toRune(val int) rune {
 }
 
 func allElementsSame[T comparable](slice []T) bool {
-    for i:=1;i<len(slice);i++{
-        if slice[i] != slice[i-1]{
-            return false
-        }
-    }
-    return true
+	for i := 1; i < len(slice); i++ {
+		if slice[i] != slice[i-1] {
+			return false
+		}
+	}
+	return true
 }
-
 
 // Function to find prime factors of a number
 func primeFactors(n int) map[int]int {
-    factors := make(map[int]int)
-    // Count the number of 2s that divide n
-    for n%2 == 0 {
-        factors[2]++
-        n = n / 2
-    }
-    // n must be odd at this point. So start from 3 and iterate until sqrt(n)
-    for i := 3; i <= int(math.Sqrt(float64(n))); i = i + 2 {
-        // While i divides n, count i and divide n
-        for n%i == 0 {
-            factors[i]++
-            n = n / i
-        }
-    }
-    // If n is a prime number greater than 2
-    if n > 2 {
-        factors[n]++
-    }
-    return factors
+	factors := make(map[int]int)
+	// Count the number of 2s that divide n
+	for n%2 == 0 {
+		factors[2]++
+		n = n / 2
+	}
+	// n must be odd at this point. So start from 3 and iterate until sqrt(n)
+	for i := 3; i <= int(math.Sqrt(float64(n))); i = i + 2 {
+		// While i divides n, count i and divide n
+		for n%i == 0 {
+			factors[i]++
+			n = n / i
+		}
+	}
+	// If n is a prime number greater than 2
+	if n > 2 {
+		factors[n]++
+	}
+	return factors
 }
 
 // Function to find LCM of an array of integers
 func findLCM(arr []int) int {
-    overallFactors := make(map[int]int)
-    for _, num := range arr {
-        // Get prime factors of each number
-        primeFactorsOfNum := primeFactors(num)
-        for prime, power := range primeFactorsOfNum {
-            if currentPower, exists := overallFactors[prime]; !exists || power > currentPower {
-                // Store the highest power of each prime
-                overallFactors[prime] = power
-            }
-        }
-    }
-    // Calculate LCM by multiplying the highest powers of all primes
-    lcm := 1
-    for prime, power := range overallFactors {
-        lcm *= int(math.Pow(float64(prime), float64(power)))
-    }
-    return lcm
+	overallFactors := make(map[int]int)
+	for _, num := range arr {
+		// Get prime factors of each number
+		primeFactorsOfNum := primeFactors(num)
+		for prime, power := range primeFactorsOfNum {
+			if currentPower, exists := overallFactors[prime]; !exists || power > currentPower {
+				// Store the highest power of each prime
+				overallFactors[prime] = power
+			}
+		}
+	}
+	// Calculate LCM by multiplying the highest powers of all primes
+	lcm := 1
+	for prime, power := range overallFactors {
+		lcm *= int(math.Pow(float64(prime), float64(power)))
+	}
+	return lcm
 }
 
 func leastCommonMultiple(slice []int) int {
-    calc := []int{}
-    for _, i := range slice {
-        calc = append(calc, i)
-    }
-    for !allElementsSame[int](calc) {
-        min_element := math.MaxInt
-        for _, v := range calc {
-            min_element = min(v, min_element)
-        }
-        min_index := IndexOf[int](calc, min_element)
-        calc[min_index] += slice[min_index]
-        fmt.Printf("LCM (%v): %v\n", slice, calc)
-    }
+	calc := []int{}
+	for _, i := range slice {
+		calc = append(calc, i)
+	}
+	for !allElementsSame[int](calc) {
+		min_element := math.MaxInt
+		for _, v := range calc {
+			min_element = min(v, min_element)
+		}
+		min_index := IndexOf[int](calc, min_element)
+		calc[min_index] += slice[min_index]
+		fmt.Printf("LCM (%v): %v\n", slice, calc)
+	}
 
-    return calc[0]
+	return calc[0]
 }
 
 func abs(x int) int {
@@ -218,8 +217,8 @@ func processConjunction(pulse Pulse, forward, backward map[string][]string, conj
 
 func processSignal(presses int, names []string, forward map[string][]string,
 	backward map[string][]string, types map[string]ModuleType,
-	states map[string]bool,	conj_states map[string]map[string]bool) []Pulse {
-    result := []Pulse{}
+	states map[string]bool, conj_states map[string]map[string]bool) []Pulse {
+	result := []Pulse{}
 	pulse := Pulse{"button", "broadcaster", false}
 	to_work := []Pulse{pulse}
 	for len(to_work) > 0 {
@@ -227,28 +226,28 @@ func processSignal(presses int, names []string, forward map[string][]string,
 		to_work = to_work[1:]
 		name := current.target
 
-        if types[current.target] == CONJUNCTION && current.highlow == true {
-            result = append(result, current)
-        }
-        others := []Pulse{}
+		if types[current.target] == CONJUNCTION && current.highlow == true {
+			result = append(result, current)
+		}
+		others := []Pulse{}
 		switch t := types[name]; t {
 		case UNTYPED:
-            for _, o := range forward[name] {
-                others = append(others, Pulse{name, o, current.highlow})
-            }
+			for _, o := range forward[name] {
+				others = append(others, Pulse{name, o, current.highlow})
+			}
 		case FLIPFLOP:
 			others = processFlipflop(current, forward, states)
 		case CONJUNCTION:
 			others = processConjunction(current, forward, backward, conj_states)
 		}
-        for _, o := range others {
-            if debug {
-                fmt.Printf("%v -%v-> %v\n", name, current.highlow, o)
-            }
-            to_work = append(to_work, o)
-        }
+		for _, o := range others {
+			if debug {
+				fmt.Printf("%v -%v-> %v\n", name, current.highlow, o)
+			}
+			to_work = append(to_work, o)
+		}
 	}
-    return result
+	return result
 }
 
 func main() {
@@ -328,55 +327,55 @@ func main() {
 		fmt.Println("Run pulses")
 	}
 
-    found := false
+	found := false
 	presses := 0
-    to_watch := ""
-    for _, name := range node_names {
-        if IndexOf[string](forward_links[name], "rx")>=0 {
-            to_watch = name
-            break
-        }
-    }
-    sources := back_links[to_watch]
-    watch := make(map[Pulse]bool)
-    for _, s := range sources {
-        pulse := Pulse{s, to_watch, true}
-        watch[pulse] = true
-        fmt.Printf("Watching for pulse: %v\n", pulse)
+	to_watch := ""
+	for _, name := range node_names {
+		if IndexOf[string](forward_links[name], "rx") >= 0 {
+			to_watch = name
+			break
+		}
+	}
+	sources := back_links[to_watch]
+	watch := make(map[Pulse]bool)
+	for _, s := range sources {
+		pulse := Pulse{s, to_watch, true}
+		watch[pulse] = true
+		fmt.Printf("Watching for pulse: %v\n", pulse)
 
-    }
-    seen := make(map[Pulse]bool)
-    cycle := make(map[Pulse]int)
-    len_sources := len(sources)
+	}
+	seen := make(map[Pulse]bool)
+	cycle := make(map[Pulse]int)
+	len_sources := len(sources)
 	for !found {
 		presses++
-        conj_observed := processSignal(presses, node_names, forward_links, back_links, modules_type, modules_state, conjunction_states)
-        for _, pulse := range conj_observed {
-            if watch[pulse] {
-                fmt.Printf("%v: %v observed.\n", presses, pulse)
-                if !seen[pulse] {
-                    seen[pulse] = true
-                    cycle[pulse] = presses
-                    //fmt.Printf("%v\n", seen)
-                    seen_count := 0
-                    for _, b := range sources {
-                        if seen[Pulse{b, to_watch, true}] {
-                            seen_count++
-                        }
-                    }
-                    // fmt.Printf("Seen count %v (len sources=%v)\n", seen_count, len_sources)
-                    found = seen_count == len_sources
-                    // fmt.Printf("Found = %v\n", found)
-                }
-            }
-        }
+		conj_observed := processSignal(presses, node_names, forward_links, back_links, modules_type, modules_state, conjunction_states)
+		for _, pulse := range conj_observed {
+			if watch[pulse] {
+				fmt.Printf("%v: %v observed.\n", presses, pulse)
+				if !seen[pulse] {
+					seen[pulse] = true
+					cycle[pulse] = presses
+					//fmt.Printf("%v\n", seen)
+					seen_count := 0
+					for _, b := range sources {
+						if seen[Pulse{b, to_watch, true}] {
+							seen_count++
+						}
+					}
+					// fmt.Printf("Seen count %v (len sources=%v)\n", seen_count, len_sources)
+					found = seen_count == len_sources
+					// fmt.Printf("Found = %v\n", found)
+				}
+			}
+		}
 	}
 
-    result_cylces := []int{}
-    for _, s := range sources {
-        result_cylces = append(result_cylces, cycle[Pulse{s, to_watch, true}])
-    }
-    fmt.Printf("%v\n", result_cylces)
+	result_cylces := []int{}
+	for _, s := range sources {
+		result_cylces = append(result_cylces, cycle[Pulse{s, to_watch, true}])
+	}
+	fmt.Printf("%v\n", result_cylces)
 	// Collect results
 	results := findLCM(result_cylces)
 
