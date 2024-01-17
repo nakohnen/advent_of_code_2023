@@ -36,7 +36,52 @@ func allElementsSame[T comparable](slice []T) bool {
     return true
 }
 
-func lestCommonMultiple(slice []int) int {
+
+// Function to find prime factors of a number
+func primeFactors(n int) map[int]int {
+    factors := make(map[int]int)
+    // Count the number of 2s that divide n
+    for n%2 == 0 {
+        factors[2]++
+        n = n / 2
+    }
+    // n must be odd at this point. So start from 3 and iterate until sqrt(n)
+    for i := 3; i <= int(math.Sqrt(float64(n))); i = i + 2 {
+        // While i divides n, count i and divide n
+        for n%i == 0 {
+            factors[i]++
+            n = n / i
+        }
+    }
+    // If n is a prime number greater than 2
+    if n > 2 {
+        factors[n]++
+    }
+    return factors
+}
+
+// Function to find LCM of an array of integers
+func findLCM(arr []int) int {
+    overallFactors := make(map[int]int)
+    for _, num := range arr {
+        // Get prime factors of each number
+        primeFactorsOfNum := primeFactors(num)
+        for prime, power := range primeFactorsOfNum {
+            if currentPower, exists := overallFactors[prime]; !exists || power > currentPower {
+                // Store the highest power of each prime
+                overallFactors[prime] = power
+            }
+        }
+    }
+    // Calculate LCM by multiplying the highest powers of all primes
+    lcm := 1
+    for prime, power := range overallFactors {
+        lcm *= int(math.Pow(float64(prime), float64(power)))
+    }
+    return lcm
+}
+
+func leastCommonMultiple(slice []int) int {
     calc := []int{}
     for _, i := range slice {
         calc = append(calc, i)
@@ -48,6 +93,7 @@ func lestCommonMultiple(slice []int) int {
         }
         min_index := IndexOf[int](calc, min_element)
         calc[min_index] += slice[min_index]
+        fmt.Printf("LCM (%v): %v\n", slice, calc)
     }
 
     return calc[0]
@@ -170,30 +216,21 @@ func processConjunction(pulse Pulse, forward, backward map[string][]string, conj
 	return result
 }
 
-func processSignal(names []string, forward map[string][]string,
+func processSignal(presses int, names []string, forward map[string][]string,
 	backward map[string][]string, types map[string]ModuleType,
-	states map[string]bool,
-	conj_states map[string]map[string]bool, to_watch []string) Pulse {
-	low := 0
-	high := 0
+	states map[string]bool,	conj_states map[string]map[string]bool) []Pulse {
+    result := []Pulse{}
 	pulse := Pulse{"button", "broadcaster", false}
 	to_work := []Pulse{pulse}
-    res_ps := pulse
 	for len(to_work) > 0 {
 		current := to_work[0]
 		to_work = to_work[1:]
 		name := current.target
-		if current.highlow {
-			high++
-		} else {
-			low++
-		}
-        for _, w := range to_watch {
-            if current.target == w && current.highlow == true {
-                //fmt.Printf("Watched -> %v\n", current)
-                res_ps = current
-            }
+
+        if types[current.target] == CONJUNCTION && current.highlow == true {
+            result = append(result, current)
         }
+
 		switch t := types[name]; t {
 		case UNTYPED:
 			for _, other := range forward[name] {
@@ -220,8 +257,7 @@ func processSignal(names []string, forward map[string][]string,
 			}
 		}
 	}
-
-	return res_ps
+    return result
 }
 
 func main() {
@@ -306,42 +342,49 @@ func main() {
 	//	conj_states map[string]map[string]bool) (int, int) {
     found := false
 	presses := 0
-    to_watch := []string{"rx", "hj"}
-    sources := back_links["hj"]
+    to_watch := "hj"
+    sources := back_links[to_watch]
     watch := make(map[Pulse]bool)
     for _, s := range sources {
-        watch[Pulse{s, "hj", true}] = true
+        pulse := Pulse{s, to_watch, true}
+        watch[pulse] = true
+        fmt.Printf("Watching for pulse: %v\n", pulse)
+
     }
     seen := make(map[Pulse]bool)
     cycle := make(map[Pulse]int)
+    len_sources := len(sources)
 	for !found {
 		presses++
-		s := processSignal(node_names, forward_links, back_links, modules_type, modules_state, conjunction_states, to_watch)
-        found = true
-        if watch[s] {
-            fmt.Printf("%v: %v observed.\n", presses, s)
-            if !seen[s] {
-                seen[s] = true
-                cycle[s] = presses
+        conj_observed := processSignal(presses, node_names, forward_links, back_links, modules_type, modules_state, conjunction_states)
+        for _, pulse := range conj_observed {
+            if watch[pulse] {
+                fmt.Printf("%v: %v observed.\n", presses, pulse)
+                if !seen[pulse] {
+                    seen[pulse] = true
+                    cycle[pulse] = presses
+                    fmt.Printf("%v\n", seen)
+                    seen_count := 0
+                    for _, b := range sources {
+                        if seen[Pulse{b, to_watch, true}] {
+                            seen_count++
+                        }
+                    }
+                    fmt.Printf("Seen count %v (len sources=%v)\n", seen_count, len_sources)
+                    found = seen_count == len_sources
+                    fmt.Printf("Found = %v\n", found)
+                }
             }
         }
-        for _, b := range sources {
-            if !seen[Pulse{b, "hj", true}] {
-                found = false
-            }
-        }
-		if presses%1000000 == 0 {
-    //			fmt.Printf("%v runs\n", presses)
-		}
 	}
 
     result_cylces := []int{}
     for _, s := range sources {
         result_cylces = append(result_cylces, cycle[Pulse{s, "hj", true}])
-        
     }
+    fmt.Printf("%v\n", result_cylces)
 	// Collect results
-	results := lestCommonMultiple(result_cylces)
+	results := findLCM(result_cylces)
 
 	fmt.Println("Final results:", results)
 
