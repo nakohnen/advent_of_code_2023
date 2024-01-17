@@ -336,13 +336,16 @@ func main() {
 		fmt.Println("")
 		fmt.Println("Run pulses")
 	}
-	// func processSignal(start string, names []string, forward map[string][]string,
-	//	backward map[string][]string, types map[string]ModuleType,
-	//	states map[string]bool,
-	//	conj_states map[string]map[string]bool) (int, int) {
+
     found := false
 	presses := 0
-    to_watch := "hj"
+    to_watch := ""
+    for _, name := range node_names {
+        if IndexOf[string](forward_links[name], "rx")>=0 {
+            to_watch = name
+            break
+        }
+    }
     sources := back_links[to_watch]
     watch := make(map[Pulse]bool)
     for _, s := range sources {
@@ -363,16 +366,16 @@ func main() {
                 if !seen[pulse] {
                     seen[pulse] = true
                     cycle[pulse] = presses
-                    fmt.Printf("%v\n", seen)
+                    //fmt.Printf("%v\n", seen)
                     seen_count := 0
                     for _, b := range sources {
                         if seen[Pulse{b, to_watch, true}] {
                             seen_count++
                         }
                     }
-                    fmt.Printf("Seen count %v (len sources=%v)\n", seen_count, len_sources)
+                    // fmt.Printf("Seen count %v (len sources=%v)\n", seen_count, len_sources)
                     found = seen_count == len_sources
-                    fmt.Printf("Found = %v\n", found)
+                    // fmt.Printf("Found = %v\n", found)
                 }
             }
         }
@@ -380,7 +383,7 @@ func main() {
 
     result_cylces := []int{}
     for _, s := range sources {
-        result_cylces = append(result_cylces, cycle[Pulse{s, "hj", true}])
+        result_cylces = append(result_cylces, cycle[Pulse{s, to_watch, true}])
     }
     fmt.Printf("%v\n", result_cylces)
 	// Collect results
