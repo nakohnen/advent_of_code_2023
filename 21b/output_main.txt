@@ -1,0 +1,104 @@
+Debug enabled
+Simulating 400 steps with start {65 65}.
+Width=131, height=131
+Calculating frame point {0 0} ->  done!
+Calculating frame point {0 65} ->  done!
+Calculating frame point {0 130} ->  done!
+Calculating frame point {65 0} ->  done!
+Calculating frame point {65 65} ->  done!
+Calculating frame point {65 130} ->  done!
+Calculating frame point {130 0} ->  done!
+Calculating frame point {130 65} ->  done!
+Calculating frame point {130 130} ->  done!
+Done calculating minimum steps.
+{0 0} even=1 => 7584
+{0 0} even=0 => 7613
+{0 65} even=1 => 7613
+{0 65} even=0 => 7584
+{0 130} even=1 => 7584
+{0 130} even=0 => 7613
+{65 0} even=1 => 7613
+{65 0} even=0 => 7584
+{65 65} even=1 => 7584
+{65 65} even=0 => 7613
+{65 130} even=1 => 7613
+{65 130} even=0 => 7584
+{130 0} even=1 => 7584
+{130 0} even=0 => 7613
+{130 65} even=1 => 7613
+{130 65} even=0 => 7584
+{130 130} even=1 => 7584
+{130 130} even=0 => 7613
+Done calculating calc shortcuts.
+To work on: 3 frames with 1 threads
+Input: {0 0}
+Input: {0 131}
+Input: {0 262}
+Input: {0 393}
+Input: {0 524}
+C3) S={65 65} t={0 0} => {65 65} => max_d 130 < max_steps 400 => result = 7613
+C3) S={65 65} t={0 131} => {65 0} => max_d 261 < max_steps 400 => result = 15168
+C3) S={65 65} t={0 262} => {65 0} => max_d 392 < max_steps 400 => result = 15226
+Input: {131 0}
+Input: {131 131}
+Input: {131 262}
+C2) inner: {0 393} -> {0 -393} min_d=328 min_p={65 130} => sub result=2348
+C2) inner: {0 393} -> {0 393} min_d=328 min_p={65 0} => sub result=2352
+C2) S={65 65} t={0 393} => {65 0} => max_d 523 > max_steps 400 >= min_d 328 => result = 4700
+C1) S={65 65} t={0 524} => {65 0} => min_d 459 > max_steps 400 => result = 0
+C3) S={65 65} t={131 0} => {0 65} => max_d 261 < max_steps 400 => result = 15168
+C3) S={65 65} t={131 131} => {0 0} => max_d 392 < max_steps 400 => result = 30452
+Input: {131 393}
+Input: {131 524}
+Input: {262 0}
+Input: {262 131}
+C2) inner: {131 262} -> {-131 -262} min_d=263 min_p={130 130} => sub result=4223
+C2) inner: {131 262} -> {-131 262} min_d=263 min_p={130 0} => sub result=4221
+C2) inner: {131 262} -> {131 -262} min_d=263 min_p={0 130} => sub result=4257
+C2) inner: {131 262} -> {131 262} min_d=263 min_p={0 0} => sub result=4264
+C2) S={65 65} t={131 262} => {0 0} => max_d 523 > max_steps 400 >= min_d 263 => result = 16965
+Input: {262 262}
+C2) inner: {131 393} -> {-131 -393} min_d=394 min_p={130 130} => sub result=13
+C2) inner: {131 393} -> {-131 393} min_d=394 min_p={130 0} => sub result=14
+C2) inner: {131 393} -> {131 -393} min_d=394 min_p={0 130} => sub result=15
+C2) inner: {131 393} -> {131 393} min_d=394 min_p={0 0} => sub result=13
+C2) S={65 65} t={131 393} => {0 0} => max_d 654 > max_steps 400 >= min_d 394 => result = 55
+C1) S={65 65} t={131 524} => {0 0} => min_d 525 > max_steps 400 => result = 0
+C3) S={65 65} t={262 0} => {0 65} => max_d 392 < max_steps 400 => result = 15226
+Input: {262 393}
+Input: {262 524}
+Input: {393 0}
+C2) inner: {262 131} -> {-262 -131} min_d=263 min_p={130 130} => sub result=4223
+C2) inner: {262 131} -> {-262 131} min_d=263 min_p={130 0} => sub result=4221
+C2) inner: {262 131} -> {262 -131} min_d=263 min_p={0 130} => sub result=4257
+C2) inner: {262 131} -> {262 131} min_d=263 min_p={0 0} => sub result=4264
+C2) S={65 65} t={262 131} => {0 0} => max_d 523 > max_steps 400 >= min_d 263 => result = 16965
+Input: {393 131}
+C2) inner: {262 262} -> {-262 -262} min_d=394 min_p={130 130} => sub result=13
+C2) inner: {262 262} -> {-262 262} min_d=394 min_p={130 0} => sub result=14
+C2) inner: {262 262} -> {262 -262} min_d=394 min_p={0 130} => sub result=15
+C2) inner: {262 262} -> {262 262} min_d=394 min_p={0 0} => sub result=13
+C2) S={65 65} t={262 262} => {0 0} => max_d 654 > max_steps 400 >= min_d 394 => result = 55
+C1) S={65 65} t={262 393} => {0 0} => min_d 525 > max_steps 400 => result = 0
+C1) S={65 65} t={262 524} => {0 0} => min_d 656 > max_steps 400 => result = 0
+Input: {393 262}
+Input: {393 393}
+Input: {524 0}
+C2) inner: {393 0} -> {-393 0} min_d=328 min_p={130 65} => sub result=2342
+C2) inner: {393 0} -> {393 0} min_d=328 min_p={0 65} => sub result=2395
+C2) S={65 65} t={393 0} => {0 65} => max_d 523 > max_steps 400 >= min_d 328 => result = 4737
+Input: {524 131}
+C2) inner: {393 131} -> {-393 -131} min_d=394 min_p={130 130} => sub result=13
+C2) inner: {393 131} -> {-393 131} min_d=394 min_p={130 0} => sub result=14
+C2) inner: {393 131} -> {393 -131} min_d=394 min_p={0 130} => sub result=15
+C2) inner: {393 131} -> {393 131} min_d=394 min_p={0 0} => sub result=13
+C2) S={65 65} t={393 131} => {0 0} => max_d 654 > max_steps 400 >= min_d 394 => result = 55
+C1) S={65 65} t={393 262} => {0 0} => min_d 525 > max_steps 400 => result = 0
+C1) S={65 65} t={393 393} => {0 0} => min_d 656 > max_steps 400 => result = 0
+C1) S={65 65} t={524 0} => {0 65} => min_d 459 > max_steps 400 => result = 0
+C1) S={65 65} t={524 131} => {0 0} => min_d 525 > max_steps 400 => result = 0
+Input: {524 262}
+Final frames count vs prediction: 22 vs 3
+C1) S={65 65} t={524 262} => {0 0} => min_d 656 > max_steps 400 => result = 0
+Final results: 142385
+
