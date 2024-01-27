@@ -1,56 +1,23 @@
 Debug enabled
+Reading file sample.txt
+Read 7 bricks
+Sorting bricks
+Moving bricks
 Brick {{0 0 2} {2 0 2}} is supported by {{1 0 1} {1 2 1}}
-Moving brick {{0 2 3} {2 2 3}} by {0 0 -1}
-Brick {{0 0 2} {2 0 2}} is supported by {{1 0 1} {1 2 1}}
-Brick {{0 2 2} {2 2 2}} is supported by {{1 0 1} {1 2 1}}
-Moving brick {{0 0 4} {0 2 4}} by {0 0 -1}
-Brick {{0 0 2} {2 0 2}} is supported by {{1 0 1} {1 2 1}}
-Brick {{0 2 2} {2 2 2}} is supported by {{1 0 1} {1 2 1}}
-Brick {{0 0 3} {0 2 3}} is supported by {{0 0 2} {2 0 2}}
-Moving brick {{2 0 5} {2 2 5}} by {0 0 -1}
-Brick {{0 0 2} {2 0 2}} is supported by {{1 0 1} {1 2 1}}
-Brick {{0 2 2} {2 2 2}} is supported by {{1 0 1} {1 2 1}}
-Brick {{0 0 3} {0 2 3}} is supported by {{0 0 2} {2 0 2}}
-Moving brick {{2 0 4} {2 2 4}} by {0 0 -1}
-Brick {{0 0 2} {2 0 2}} is supported by {{1 0 1} {1 2 1}}
-Brick {{0 2 2} {2 2 2}} is supported by {{1 0 1} {1 2 1}}
-Brick {{0 0 3} {0 2 3}} is supported by {{0 0 2} {2 0 2}}
-Brick {{2 0 3} {2 2 3}} is supported by {{0 0 2} {2 0 2}}
-Moving brick {{0 1 6} {2 1 6}} by {0 0 -1}
-Brick {{0 0 2} {2 0 2}} is supported by {{1 0 1} {1 2 1}}
-Brick {{0 2 2} {2 2 2}} is supported by {{1 0 1} {1 2 1}}
-Brick {{0 0 3} {0 2 3}} is supported by {{0 0 2} {2 0 2}}
-Brick {{2 0 3} {2 2 3}} is supported by {{0 0 2} {2 0 2}}
-Moving brick {{0 1 5} {2 1 5}} by {0 0 -1}
-Brick {{0 0 2} {2 0 2}} is supported by {{1 0 1} {1 2 1}}
-Brick {{0 2 2} {2 2 2}} is supported by {{1 0 1} {1 2 1}}
-Brick {{0 0 3} {0 2 3}} is supported by {{0 0 2} {2 0 2}}
-Brick {{2 0 3} {2 2 3}} is supported by {{0 0 2} {2 0 2}}
-Brick {{0 1 4} {2 1 4}} is supported by {{0 0 3} {0 2 3}}
-Moving brick {{1 1 8} {1 1 9}} by {0 0 -1}
-Brick {{0 0 2} {2 0 2}} is supported by {{1 0 1} {1 2 1}}
-Brick {{0 2 2} {2 2 2}} is supported by {{1 0 1} {1 2 1}}
-Brick {{0 0 3} {0 2 3}} is supported by {{0 0 2} {2 0 2}}
-Brick {{2 0 3} {2 2 3}} is supported by {{0 0 2} {2 0 2}}
-Brick {{0 1 4} {2 1 4}} is supported by {{0 0 3} {0 2 3}}
-Moving brick {{1 1 7} {1 1 8}} by {0 0 -1}
-Brick {{0 0 2} {2 0 2}} is supported by {{1 0 1} {1 2 1}}
-Brick {{0 2 2} {2 2 2}} is supported by {{1 0 1} {1 2 1}}
-Brick {{0 0 3} {0 2 3}} is supported by {{0 0 2} {2 0 2}}
-Brick {{2 0 3} {2 2 3}} is supported by {{0 0 2} {2 0 2}}
-Brick {{0 1 4} {2 1 4}} is supported by {{0 0 3} {0 2 3}}
-Moving brick {{1 1 6} {1 1 7}} by {0 0 -1}
-Brick {{0 0 2} {2 0 2}} is supported by {{1 0 1} {1 2 1}}
-Brick {{0 2 2} {2 2 2}} is supported by {{1 0 1} {1 2 1}}
-Brick {{0 0 3} {0 2 3}} is supported by {{0 0 2} {2 0 2}}
-Brick {{2 0 3} {2 2 3}} is supported by {{0 0 2} {2 0 2}}
-Brick {{0 1 4} {2 1 4}} is supported by {{0 0 3} {0 2 3}}
-Brick {{1 1 5} {1 1 6}} is supported by {{0 1 4} {2 1 4}}
-Brick {{0 0 2} {2 0 2}} can be safely removed
-Brick {{0 2 2} {2 2 2}} can be safely removed
-Brick {{0 0 3} {0 2 3}} can be safely removed
-Brick {{2 0 3} {2 2 3}} can be safely removed
-Brick {{1 1 5} {1 1 6}} can be safely removed
+Brick {{0 2 3} {2 2 3}} is not supported, moving down by 1 (up to brick {{1 0 1} {1 2 1}}) -> {{0 2 2} {2 2 2}}
+Brick {{0 0 4} {0 2 4}} is not supported, moving down by 1 (up to brick {{0 0 2} {2 0 2}}) -> {{0 0 3} {0 2 3}}
+Brick {{2 0 5} {2 2 5}} is not supported, moving down by 2 (up to brick {{0 0 2} {2 0 2}}) -> {{2 0 3} {2 2 3}}
+Brick {{0 1 6} {2 1 6}} is not supported, moving down by 2 (up to brick {{0 0 3} {0 2 3}}) -> {{0 1 4} {2 1 4}}
+Brick {{1 1 8} {1 1 9}} is not supported, moving down by 3 (up to brick {{0 1 4} {2 1 4}}) -> {{1 1 5} {1 1 6}}
+Creating support graph
+Counting results
+Brick {{1 0 1} {1 2 1}} is supported by [] and supports [{{0 0 2} {2 0 2}} {{0 2 2} {2 2 2}}] 
+Brick {{0 0 2} {2 0 2}} is supported by [{{1 0 1} {1 2 1}}] and supports [{{0 0 3} {0 2 3}} {{2 0 3} {2 2 3}}] and can be safely removed
+Brick {{0 2 2} {2 2 2}} is supported by [{{1 0 1} {1 2 1}}] and supports [{{0 0 3} {0 2 3}} {{2 0 3} {2 2 3}}] and can be safely removed
+Brick {{0 0 3} {0 2 3}} is supported by [{{0 0 2} {2 0 2}} {{0 2 2} {2 2 2}}] and supports [{{0 1 4} {2 1 4}}] and can be safely removed
+Brick {{2 0 3} {2 2 3}} is supported by [{{0 0 2} {2 0 2}} {{0 2 2} {2 2 2}}] and supports [{{0 1 4} {2 1 4}}] and can be safely removed
+Brick {{0 1 4} {2 1 4}} is supported by [{{0 0 3} {0 2 3}} {{2 0 3} {2 2 3}}] and supports [{{1 1 5} {1 1 6}}] 
+Brick {{1 1 5} {1 1 6}} is supported by [{{0 1 4} {2 1 4}}] and supports [] and can be safely removed
 [{{1 0 1} {1 2 1}} {{0 0 2} {2 0 2}} {{0 2 2} {2 2 2}} {{0 0 3} {0 2 3}} {{2 0 3} {2 2 3}} {{0 1 4} {2 1 4}} {{1 1 5} {1 1 6}}]
 Final results: 5
 
