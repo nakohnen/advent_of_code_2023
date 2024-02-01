@@ -1,0 +1,279 @@
+package main
+
+import (
+	"flag"
+	"fmt"
+	"os"
+	"strings"
+)
+
+const debug bool = true
+
+type Position struct {
+	x, y int
+}
+
+func addPositions(a, b Position) Position {
+	return Position{x: a.x + b.x, y: a.y + b.y}
+}
+
+type TileType int
+
+const (
+	WALL TileType = iota
+	GROUND
+	UP_SLOPE
+	DOWN_SLOPE
+	LEFT_SLOPE
+	RIGHT_SLOPE
+)
+
+func decodeRuneToTile(r rune) TileType {
+	switch r {
+	case '#':
+		return WALL
+	case '.':
+		return GROUND
+	case '^':
+		return UP_SLOPE
+	case 'v':
+		return DOWN_SLOPE
+	case '<':
+		return LEFT_SLOPE
+	case '>':
+		return RIGHT_SLOPE
+	default:
+		panic("Unknown tile type")
+	}
+}
+
+func getNeighbours(tiles [][]TileType, pos Position) []Position {
+	neighbours := []Position{}
+	if pos.x > 0 {
+		ok := false
+		switch tiles[pos.y][pos.x-1] {
+		case GROUND:
+			ok = true
+		case LEFT_SLOPE:
+			ok = true
+		}
+		if ok {
+			neighbours = append(neighbours, Position{x: pos.x - 1, y: pos.y})
+		}
+	}
+	if pos.x < len(tiles[0])-1 {
+		ok := false
+		switch tiles[pos.y][pos.x+1] {
+		case GROUND:
+			ok = true
+		case RIGHT_SLOPE:
+			ok = true
+		}
+		if ok {
+			neighbours = append(neighbours, Position{x: pos.x + 1, y: pos.y})
+		}
+	}
+	if pos.y > 0 {
+		ok := false
+		switch tiles[pos.y-1][pos.x] {
+		case GROUND:
+			ok = true
+		case UP_SLOPE:
+			ok = true
+		}
+		if ok {
+			neighbours = append(neighbours, Position{x: pos.x, y: pos.y - 1})
+		}
+	}
+	if pos.y < len(tiles)-1 {
+		ok := false
+		switch tiles[pos.y+1][pos.x] {
+		case GROUND:
+			ok = true
+		case DOWN_SLOPE:
+			ok = true
+		}
+		if ok {
+			neighbours = append(neighbours, Position{x: pos.x, y: pos.y + 1})
+		}
+	}
+	return neighbours
+}
+
+
+func isCrossroad(tiles [][]TileType, pos Position) bool {
+    // get neighbours which are slopes
+    neighbours := []Position{}
+    neighbours = append(neighbours, Position{x: pos.x, y: pos.y - 1})
+    neighbours = append(neighbours, Position{x: pos.x, y: pos.y + 1})
+    neighbours = append(neighbours, Position{x: pos.x - 1, y: pos.y})
+    neighbours = append(neighbours, Position{x: pos.x + 1, y: pos.y})
+    slopes := 0
+    for _, neighbour := range neighbours {
+        if neighbour.x >= 0 && neighbour.x < len(tiles[0]) && neighbour.y >= 0 && neighbour.y < len(tiles) {
+            switch tiles[neighbour.y][neighbour.x] {
+            case UP_SLOPE:
+                slopes += 1
+            case DOWN_SLOPE:
+                slopes += 1
+            case LEFT_SLOPE:
+                slopes += 1
+            case RIGHT_SLOPE:
+                slopes += 1
+            }
+        }
+    }
+
+
+
+    n := slopes >= 2
+    if debug && n {
+        fmt.Println("Crossroad at", pos)
+    }
+    return n
+}
+
+type PathStep struct {
+    pos Position
+    id  int
+}
+
+type Path struct {
+	ids        []int
+	steps      map[int]int
+	graph      map[int][]int
+	start, end int
+}
+
+type PathComponent struct {
+    id int
+    steps int
+    start, end Position
+}
+
+func walkPath(tiles [][]TileType, start Position, end Position) Path {
+	walked := make(map[Position]bool)
+	start_id := 1
+	end_id := 0
+	current_path_id := start_id
+	to_walk := []PathStep{{pos: start, id: current_path_id}}
+	path_steps := make(map[int]int) // path_id -> steps walked
+	path_steps[current_path_id] = 0
+	path_graph := make(map[int][]int) // path_id -> path_ids
+	path_ids := []int{current_path_id} // list of path_ids
+    tiles_ids := make(map[Position]int) // position -> path_id
+	for len(to_walk) > 0 {
+		step := to_walk[len(to_walk)-1]
+		to_walk = to_walk[:len(to_walk)-1]
+        if debug {
+            fmt.Println("Walking", step.pos, "with id", step.id)
+        }
+		if !walked[step.pos] {
+			walked[step.pos] = true
+			path_steps[step.id] += 1
+            tiles_ids[step.pos] = step.id
+			if step.pos == end {
+				end_id = step.id
+			}
+
+			neighbours := getNeighbours(tiles, step.pos)
+			for _, neighbour := range neighbours {
+				if !walked[neighbour] {
+					new_path_id := step.id
+					if isCrossroad(tiles, step.pos) {
+						current_path_id += 1
+						new_path_id = current_path_id
+						path_ids = append(path_ids, new_path_id)
+						path_steps[new_path_id] = 0
+						path_graph[step.id] = append(path_graph[step.id], new_path_id)
+					}
+                    if debug {
+                        fmt.Println("Adding", neighbour, "to", new_path_id)
+                    }
+					to_walk = append(to_walk, PathStep{pos: neighbour, id: new_path_id})
+                }
+			}
+		}
+        for _, id := range path_ids {
+            path_graph[id] = RemoveDuplicates(path_graph[id])
+        }
+	}
+	return Path{ids: path_ids, steps: path_steps, graph: path_graph, start: start_id, end: end_id}
+}
+
+func calculateLongestPath(path Path) int {
+    // Find longest path
+    to_walk := []int{path.start}
+    walked := make(map[int]bool)
+    cost := make(map[int]int) // path_id -> cost
+    for _, id := range path.ids {
+        cost[id] = 0
+    }
+    longest_path := 0
+    for len(to_walk) > 0 {
+        node := to_walk[len(to_walk)-1]
+        to_walk = to_walk[:len(to_walk)-1]
+        if !walked[node] {
+            walked[node] = true
+            longest_path += path.steps[node]
+        }
+    }
+    return longest_path
+}
+
+func main() {
+	if debug {
+		fmt.Println("Debug enabled")
+	}
+	cores_f := flag.Int("t", -1, "How many cores (threads) should we run?")
+	filename_f := flag.String("f", "", "On which file should we run this?")
+	flag.Parse()
+
+	// The second element in os.Args is the first argument
+	filename := *filename_f
+	if len(filename) == 0 {
+		fmt.Println("Please provide a filename")
+		os.Exit(1)
+	}
+	cores := *cores_f
+	if cores < 0 {
+		cores = 1
+	}
+
+	dat, err := os.ReadFile(filename)
+	Check(err)
+
+	// Read file
+	fmt.Println("Reading file", filename)
+	tiles := [][]TileType{}
+	for _, line := range strings.Split(string(dat), "\n") {
+		cleaned_line := strings.TrimSpace(line)
+		if len(cleaned_line) > 0 {
+			row := []TileType{}
+			for _, r := range cleaned_line {
+				row = append(row, decodeRuneToTile(r))
+			}
+			tiles = append(tiles, row)
+		}
+	}
+	width := len(tiles[0])
+	height := len(tiles)
+	start := Position{x: 1, y: 0}
+	end := Position{x: width - 2, y: height-1}
+	// Walk path to find all paths
+	path := walkPath(tiles, start, end)
+	fmt.Println(path)
+
+	// Find longest path
+	longest_path := 0
+
+
+	fmt.Println("Longest path:", longest_path)
+	fmt.Println("")
+
+	// Collect results
+	results := 0
+	fmt.Println("Final results:", results)
+
+	fmt.Println("")
+}

@@ -116,33 +116,11 @@ func getNeighbours(tiles [][]TileType, pos Position) []Position {
 }
 
 func isCrossroad(tiles [][]TileType, pos Position) bool {
-	// get neighbours which are slopes
-	neighbours := []Position{}
-	neighbours = append(neighbours, Position{x: pos.x, y: pos.y - 1})
-	neighbours = append(neighbours, Position{x: pos.x, y: pos.y + 1})
-	neighbours = append(neighbours, Position{x: pos.x - 1, y: pos.y})
-	neighbours = append(neighbours, Position{x: pos.x + 1, y: pos.y})
-	slopes := 0
-	for _, neighbour := range neighbours {
-		if neighbour.x >= 0 && neighbour.x < len(tiles[0]) && neighbour.y >= 0 && neighbour.y < len(tiles) {
-			switch tiles[neighbour.y][neighbour.x] {
-			case UP_SLOPE:
-				slopes += 1
-			case DOWN_SLOPE:
-				slopes += 1
-			case LEFT_SLOPE:
-				slopes += 1
-			case RIGHT_SLOPE:
-				slopes += 1
-			}
-		}
-	}
+    return tiles[pos.y][pos.x] != WALL && tiles[pos.y][pos.x] != GROUND
+}
 
-	n := slopes >= 2
-	if debug && n {
-		fmt.Println("Crossroad at", pos)
-	}
-	return n
+func isSlope(tiles [][]TileType, pos Position) bool {
+    return tiles[pos.y][pos.x] == UP_SLOPE || tiles[pos.y][pos.x] == DOWN_SLOPE || tiles[pos.y][pos.x] == LEFT_SLOPE || tiles[pos.y][pos.x] == RIGHT_SLOPE
 }
 
 type PathComponent struct {
@@ -194,48 +172,61 @@ func walkPath(tiles [][]TileType, start Position, end Position) Path {
 				end_id = current_id
 			}
 
-			// Current position is a crossroad
-			is_crossroad := isCrossroad(tiles, pos)
-			neighbours := getNeighbours(tiles, pos)
+			// Current position is a slope
+			is_slope := isSlope(tiles, pos)
+			all_neighbours := getNeighbours(tiles, pos)
+            neighbours := []Position{}
+            for _, neighbour := range all_neighbours {
+                if !walked[neighbour] {
+                    neighbours = append(neighbours, neighbour)
+                }
+            }
 
 			// Add current completed path to paths
-			if is_crossroad || len(neighbours) == 0 || pos == end {
+			if is_slope || len(neighbours) != 1 || pos == end {
 				if debug {
 					fmt.Printf("Crossroad (or end) at %v, steps: %v for path id %v\n", pos, steps, current_id)
 				}
 				paths = append(paths, PathComponent{id: current_id, steps: steps, start: current_start, end: pos})
 			}
+
 			// Add neighbours to walk
-			for _, neighbour := range neighbours {
-				if !walked[neighbour] {
-					if is_crossroad {
-						// Start new path if not already started
-						if tiles_ids[neighbour] == 0 {
-							// Create new path
-							running_path_id += 1
-							tiles_ids[neighbour] = running_path_id
-							paths_graph[running_path_id] = []int{}
-							path_starts = append(path_starts, neighbour)
-							path_ids = append(path_ids, running_path_id)
-							paths_graph[current_id] = append(paths_graph[current_id], running_path_id)
-							if debug {
-								fmt.Println("Starting new path", running_path_id, "with start from", neighbour)
-							}
-						} else {
-							// Connect to existing path
-							paths_graph[current_id] = append(paths_graph[current_id], tiles_ids[neighbour])
-							if debug {
-								fmt.Println("Connecting path", current_id, "to", tiles_ids[neighbour])
-							}
-						}
-					} else {
-						// Continue current path
-						to_walk = append(to_walk, neighbour)
-					}
-				}
-			}
+            if len(neighbours) == 1 && !is_slope {
+                to_walk = append(to_walk, neighbours[0])
+            } else {
+                if IndexOf[int](path_ids, current_id) == -1 {
+				    paths = append(paths, PathComponent{id: current_id, steps: steps, start: current_start, end: pos})
+                }
+                for _, neighbour := range neighbours {
+                    // Start new path if not already started
+                    if tiles_ids[neighbour] == 0 {
+                        // Create new path
+                        running_path_id += 1
+                        tiles_ids[neighbour] = running_path_id
+                        paths_graph[running_path_id] = []int{}
+                        path_starts = append(path_starts, neighbour)
+                        path_ids = append(path_ids, running_path_id)
+                        paths_graph[current_id] = append(paths_graph[current_id], running_path_id)
+                        paths_graph[running_path_id] = append(paths_graph[running_path_id], current_id)
+                        if debug {
+                            fmt.Println("Starting new path", running_path_id, "with start from", neighbour)
+                        }
+                    } else {
+                        // Connect to existing path
+                        paths_graph[current_id] = append(paths_graph[current_id], tiles_ids[neighbour])
+                        paths_graph[tiles_ids[neighbour]] = append(paths_graph[tiles_ids[neighbour]], current_id)
+                        if debug {
+                            fmt.Println("Connecting path", current_id, "to", tiles_ids[neighbour])
+                        }
+                    }
+                }
+            }
 		}
 	}
+    for k, v := range paths_graph {
+        paths_graph[k] = RemoveDuplicates[int](v)
+    }
+
 	return Path{ids: path_ids, components: paths, graph: paths_graph, start: start_id, end: end_id}
 }
 
@@ -251,12 +242,14 @@ func getLongestPath(p Path) int {
 			finished_paths = append(finished_paths, current_path)
 		} else {
 			for _, next_id := range p.graph[current_id] {
-				new_path := []int{}
-				for _, id := range current_path {
-					new_path = append(new_path, id)
-				}
-				new_path = append(new_path, next_id)
-				paths = append(paths, new_path)
+                if IndexOf[int](current_path, next_id) == -1 {
+                    new_path := []int{}
+                    for _, id := range current_path {
+                        new_path = append(new_path, id)
+                    }
+                    new_path = append(new_path, next_id)
+                    paths = append(paths, new_path)
+                }
 			}
 		}
 	}

@@ -1,0 +1,160 @@
+package main
+
+import (
+	"flag"
+	"fmt"
+	"os"
+	"strings"
+)
+
+const debug bool = true
+
+type Position struct {
+	x, y int
+}
+
+func addPositions(a, b Position) Position {
+	return Position{x: a.x + b.x, y: a.y + b.y}
+}
+
+type TileType int
+
+const (
+	WALL TileType = iota
+	GROUND
+	UP_SLOPE
+	DOWN_SLOPE
+	LEFT_SLOPE
+	RIGHT_SLOPE
+)
+
+func decodeRuneToTile(r rune) TileType {
+	switch r {
+	case '#':
+		return WALL
+	case '.':
+		return GROUND
+	case '^':
+		return UP_SLOPE
+	case 'v':
+		return DOWN_SLOPE
+	case '<':
+		return LEFT_SLOPE
+	case '>':
+		return RIGHT_SLOPE
+	default:
+		panic("Unknown tile type")
+	}
+}
+
+func getNeighbours(tiles [][]TileType, pos Position) []Position {
+	neighbours := []Position{}
+
+	if pos.x > 0 {
+        if tiles[pos.y][pos.x-1] != WALL {
+            neighbours = append(neighbours, Position{x: pos.x - 1, y: pos.y})
+        }
+	}
+    if pos.x < len(tiles[0])-1 {
+        if tiles[pos.y][pos.x+1] != WALL {
+            neighbours = append(neighbours, Position{x: pos.x + 1, y: pos.y})
+        }
+    }
+    if pos.y > 0 {
+        if tiles[pos.y-1][pos.x] != WALL {
+            neighbours = append(neighbours, Position{x: pos.x, y: pos.y - 1})
+        }
+    }
+    if pos.y < len(tiles)-1 {
+        if tiles[pos.y+1][pos.x] != WALL {
+            neighbours = append(neighbours, Position{x: pos.x, y: pos.y + 1})
+        }
+    }
+	return neighbours
+}
+
+func copyMap(m map[Position]bool) map[Position]bool {
+    result := map[Position]bool{}
+    for k, v := range m {
+        result[k] = v
+    }
+    return result
+}
+
+func walkPath(tiles [][]TileType, start Position, end Position, visited map[Position]bool) []int {
+    result := []int{}
+    to_visit := []Position{start}
+    for len(to_visit) > 0 {
+        pos := to_visit[0]
+        to_visit = to_visit[1:]
+        visited[pos] = true
+        all_neighbours := getNeighbours(tiles, pos)
+        neighbours := []Position{}
+        for _, neighbour := range all_neighbours {
+            if !visited[neighbour] {
+                neighbours = append(neighbours, neighbour)
+            }
+        }
+        if len(neighbours) == 1 {
+            to_visit = append(to_visit, neighbours[0])
+        } else {
+            if debug {
+                fmt.Println("We have reached a fork at", pos, "with neighbours", neighbours)
+            }
+            for _, neighbour := range getNeighbours(tiles, pos) {
+                for _, r := range walkPath(tiles, neighbour, end, copyMap(visited)) {
+                    result = append(result, r)
+                }
+            }
+        }
+    }
+    return result
+}
+
+func main() {
+	if debug {
+		fmt.Println("Debug enabled")
+	}
+	cores_f := flag.Int("t", -1, "How many cores (threads) should we run?")
+	filename_f := flag.String("f", "", "On which file should we run this?")
+	flag.Parse()
+
+	// The second element in os.Args is the first argument
+	filename := *filename_f
+	if len(filename) == 0 {
+		fmt.Println("Please provide a filename")
+		os.Exit(1)
+	}
+	cores := *cores_f
+	if cores < 0 {
+		cores = 1
+	}
+
+	dat, err := os.ReadFile(filename)
+	Check(err)
+
+	// Read file
+	fmt.Println("Reading file", filename)
+	tiles := [][]TileType{}
+	for _, line := range strings.Split(string(dat), "\n") {
+		cleaned_line := strings.TrimSpace(line)
+		if len(cleaned_line) > 0 {
+			row := []TileType{}
+			for _, r := range cleaned_line {
+				row = append(row, decodeRuneToTile(r))
+			}
+			tiles = append(tiles, row)
+		}
+	}
+	width := len(tiles[0])
+	height := len(tiles)
+	start := Position{x: 1, y: 0}
+	end := Position{x: width - 2, y: height - 1}
+	// Walk path to find all paths
+	path := walkPath(tiles, start, end)
+	fmt.Println(path)
+
+	// Find longest path
+	longest_path := getLongestPath(path)
+	fmt.Println("Longest path:", longest_path)
+}
