@@ -1,0 +1,54 @@
+package main
+
+import "fmt"
+
+// generateCombinations generates all combinations of size 'comboSize' from the given slice 'set'.
+func generateCombinations(set []int, comboSize int) [][]int {
+    n := len(set)
+    if comboSize > n || comboSize <= 0 {
+        return nil
+    }
+
+    // Initialize the first combination
+    indices := make([]int, comboSize)
+    for i := range indices {
+        indices[i] = i
+    }
+
+    var combinations [][]int
+    for {
+        // Create a new combination based on the indices
+        combo := make([]int, comboSize)
+        for i, index := range indices {
+            combo[i] = set[index]
+        }
+        combinations = append(combinations, combo)
+
+        // Move to the next combination
+        i := comboSize - 1
+        for i >= 0 && indices[i] == i+n-comboSize {
+            i--
+        }
+        if i < 0 {
+            break // All combinations have been generated
+        }
+        indices[i]++
+        for j := i + 1; j < comboSize; j++ {
+            indices[j] = indices[j-1] + 1
+        }
+    }
+
+    return combinations
+}
+
+func main() {
+    set := []int{1, 2, 3, 4, 5}
+    comboSize := 3
+    combinations := generateCombinations(set, comboSize)
+
+    fmt.Println("All possible combinations of 3 elements from the set:")
+    for _, combo := range combinations {
+        fmt.Println(combo)
+    }
+}
+

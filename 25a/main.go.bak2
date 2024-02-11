@@ -1,0 +1,632 @@
+package main
+
+import (
+	"flag"
+	"fmt"
+	"math"
+	"math/rand"
+	"os"
+	"strings"
+	"sync"
+)
+
+const debug bool = true
+
+// generateCombinations generates all combinations of size 'comboSize' from the given slice 'set'.
+func generateCombinations(set_len int, comboSize int) [][]int {
+    set := make([]int, set_len)
+    for i := 0; i < set_len; i++ {
+        set[i] = i
+    }
+    n := len(set)
+    if comboSize > n || comboSize <= 0 {
+        return nil
+    }
+
+    // Initialize the first combination
+    indices := make([]int, comboSize)
+    for i := range indices {
+        indices[i] = i
+    }
+
+    var combinations [][]int
+    for {
+        // Create a new combination based on the indices
+        combo := make([]int, comboSize)
+        for i, index := range indices {
+            combo[i] = set[index]
+        }
+        combinations = append(combinations, combo)
+
+        // Move to the next combination
+        i := comboSize - 1
+        for i >= 0 && indices[i] == i+n-comboSize {
+            i--
+        }
+        if i < 0 {
+            break // All combinations have been generated
+        }
+        indices[i]++
+        for j := i + 1; j < comboSize; j++ {
+            indices[j] = indices[j-1] + 1
+        }
+    }
+
+    return combinations
+}
+
+func generateCombinationsChannel(set_len int, comboSize int, combinations chan<- []int) {
+    set := make([]int, set_len)
+    for i := 0; i < set_len; i++ {
+        set[i] = i
+    }
+    n := len(set)
+
+    // Initialize the first combination
+    indices := make([]int, comboSize)
+    for i := range indices {
+        indices[i] = i
+    }
+
+    for {
+        // Create a new combination based on the indices
+        combo := make([]int, comboSize)
+        for i, index := range indices {
+            combo[i] = set[index]
+        }
+        combinations <- combo
+
+        // Move to the next combination
+        i := comboSize - 1
+        for i >= 0 && indices[i] == i+n-comboSize {
+            i--
+        }
+        if i < 0 {
+            break // All combinations have been generated
+        }
+        indices[i]++
+        for j := i + 1; j < comboSize; j++ {
+            indices[j] = indices[j-1] + 1
+        }
+    }
+    close(combinations)
+}
+
+func multiplyMatrices(A [][]int, B [][]int) ([][]int, error) {
+    aRows := len(A)
+    aCols := len(A[0])
+    bRows := len(B)
+    bCols := len(B[0])
+
+    if aCols != bRows {
+        return nil, fmt.Errorf("cannot multiply the given matrices: incompatible dimensions")
+    }
+
+    // Initialize the result matrix with zeros
+    result := make([][]int, aRows)
+    for i := range result {
+        result[i] = make([]int, bCols)
+    }
+
+    // Perform matrix multiplication
+    for i := 0; i < aRows; i++ {
+        for j := 0; j < bCols; j++ {
+            for k := 0; k < aCols; k++ {
+                result[i][j] += A[i][k] * B[k][j]
+            }
+        }
+    }
+    /*
+    if debug {
+        fmt.Println("Matrix multiplication result")
+        for i, row := range result {
+            fmt.Println(i, row)
+        }
+    }
+    */
+
+    return result, nil
+}
+
+func createAdjacencyMatrix(graph map[string][]string, nodes []string) [][]int {
+    // Create adjacency matrix
+    adjacency_matrix := make([][]int, len(nodes))
+    for i := range adjacency_matrix {
+        adjacency_matrix[i] = make([]int, len(nodes))
+    }
+    for i, node := range nodes {
+        for j, other_node := range nodes {
+            if i == j {
+                adjacency_matrix[i][j] = 0
+            } else {
+                if IndexOf[string](graph[node], other_node) != -1 {
+                    adjacency_matrix[i][j] = 1
+                } else {
+                    adjacency_matrix[i][j] = 0
+                }
+            }
+        }
+    }
+    /*
+    if debug {
+        fmt.Println("Adjacency matrix")
+        for i, row := range adjacency_matrix {
+            fmt.Println(nodes[i], row)
+        }
+    }
+    */
+    return adjacency_matrix
+}
+
+func reduceConnections(graph map[string][]string, nodes []string, connections [][2]string) [][2]string {
+    adj_matrix := createAdjacencyMatrix(graph, nodes)
+    adj_matrix_square, err := multiplyMatrices(adj_matrix, adj_matrix)
+    if err != nil {
+        fmt.Println(err)
+        os.Exit(1)
+    }
+
+    reduced_connections := [][2]string{}
+    found_triangle_edges := make(map[string]bool)
+
+    // Check if connection is in adj_matrix_square
+    for _, connection := range connections {
+        i := IndexOf[string](nodes, connection[0])
+        j := IndexOf[string](nodes, connection[1])
+        triangle := found_triangle_edges[connection[0] + connection[1]]
+        if !triangle {
+            if adj_matrix_square[i][j] > 0 || adj_matrix_square[j][i] > 0 {
+            // Check if a third node exists that connects the two nodes
+            for k := range nodes {
+                if k != i && k != j && adj_matrix_square[i][k] > 0 && adj_matrix_square[k][j] > 0 {
+                    triangle = true
+                    
+                    if debug {
+                        fmt.Println("Triangle found", nodes[i], nodes[j], nodes[k], "for connection", connection)
+                    }
+                    found_triangle_edges[connection[0] + connection[1]] = true
+                    found_triangle_edges[connection[1] + connection[0]] = true
+                    found_triangle_edges[connection[0] + nodes[k]] = true
+                    found_triangle_edges[connection[1] + nodes[k]] = true
+                    found_triangle_edges[nodes[k] + connection[1]] = true
+                    found_triangle_edges[nodes[k] + connection[0]] = true
+
+                    break
+                }
+
+            }
+            }
+        } else {
+            if debug {
+                fmt.Println("Triangle already found", nodes[i], nodes[j], "for connection", connection)
+            }
+        }
+        if !triangle {
+            if debug {
+                fmt.Println("No triangle found for", connection)
+            }
+            reduced_connections = append(reduced_connections, connection)
+        }
+    }
+    return reduced_connections
+}
+
+
+
+
+func checkConnected(graph map[string][]string, nodes []string) bool {
+    // Create adjacency matrix
+    adjacency_matrix := make([][]int, len(nodes))
+    for i := range adjacency_matrix {
+        adjacency_matrix[i] = make([]int, len(nodes))
+    }
+    for i, node := range nodes {
+        for j, other_node := range nodes {
+            if i == j {
+                adjacency_matrix[i][j] = 0
+            } else {
+                if IndexOf[string](graph[node], other_node) != -1 {
+                    adjacency_matrix[i][j] = 1
+                } else {
+                    adjacency_matrix[i][j] = 0
+                }
+            }
+        }
+    }
+    // Print adjacency matrix
+    fmt.Println("Adjacency matrix")
+    for i, row := range adjacency_matrix {
+        fmt.Println(nodes[i], row)
+    }
+
+    adjacency_matrix_m := make([][]int, len(nodes))
+    for i := range adjacency_matrix_m {
+        adjacency_matrix_m[i] = make([]int, len(nodes))
+    }
+    for i, row := range adjacency_matrix {
+        for j, val := range row {
+            adjacency_matrix_m[i][j] = val
+        }
+    }
+
+    // Multiply the adjacency matrix with itself
+    connected := true
+    for i:=0; i<len(nodes)-1; i++ {
+        adjacency_matrix_2, err := multiplyMatrices(adjacency_matrix_m, adjacency_matrix)
+        if err != nil {
+            fmt.Println(err)
+            os.Exit(1)
+        }
+        adjacency_matrix_m = adjacency_matrix_2
+        fmt.Printf("Adjacency matrix: (%v)-th power\n", i+1)
+        for i, row := range adjacency_matrix_m {
+            fmt.Println(nodes[i], row)
+        }
+        no_zeros := true
+        for _, row := range adjacency_matrix_m {
+            for _, val := range row {
+                if val == 0 {
+                    no_zeros = false
+                }
+            }
+        }
+        if no_zeros {
+            fmt.Println("The graph is connected")
+            connected = true
+            break
+        }
+    }
+    return connected
+}
+
+func getConnectedGroupsCount(graph map[string][]string, nodes []string, remove [3][2]string) int {
+    new_graph := make(map[string][]string)
+    for k, v := range graph {
+        new_graph[k] = []string{}
+        for _, val := range v {
+            found := false
+            for _, rem := range remove {
+                if (rem[0] == k && rem[1] == val) || (rem[0] == val && rem[1] == k) {
+                    found = true
+                    break
+                }
+            }
+            if !found {
+                new_graph[k] = append(new_graph[k], val)
+            }
+        }
+    }
+
+    // Do a depth first search
+    visited := make(map[string]bool)
+    painted := make(map[string]int)
+    for _, node := range nodes {
+        visited[node] = false
+        painted[node] = 0
+    }
+    work := []string{nodes[0]}
+    group := 1
+    for len(work) > 0 {
+        current_node := work[0]
+        work = work[1:]
+        if !visited[current_node] {
+            visited[current_node] = true
+            painted[current_node] = group
+            for _, neighbour := range new_graph[current_node] {
+                work = append(work, neighbour)
+            }
+        }
+        if len(work) == 0 {
+            for _, node := range nodes {
+                if !visited[node] {
+                    group++
+                    work = append(work, node)
+                    break
+                }
+            }
+        }
+    }
+    paints := []int{}
+    for _, paint := range painted {
+        paints = append(paints, paint)
+    }
+    paints = RemoveDuplicates[int](paints)
+    if len(paints) == 1 {
+        return 0
+    }
+    paints_size := []int{}
+    for _, paint := range paints {
+        size := 0
+        for _, p := range painted {
+            if p == paint {
+                size++
+            }
+        }
+        paints_size = append(paints_size, size)
+    }
+    result := 1
+    for _, size := range paints_size {
+        result *= size
+    }
+    return result
+}
+
+func copyMatrix(matrix [][]int) [][]int {
+    m := make([][]int, len(matrix))
+    for i, row := range matrix {
+        m[i] = make([]int, len(row))
+        for j, val := range row {
+            m[i][j] = val
+        }
+    }
+    return m
+}
+
+func mergeNodes(graph map[string][]string, weights map[string]map[string]int, nodes []string, merge1, merge2 string) (map[string][]string, map[string]map[string]int,[]string){
+    to_merge := merge1 + merge2
+
+    new_nodes := []string{}
+    for _, node := range nodes {
+        if node != merge1 && node != merge2 {
+            new_nodes = append(new_nodes, node)
+        }
+    }
+    new_nodes = append(new_nodes, to_merge)
+
+    // Create new graph
+    new_graph := make(map[string][]string)
+    new_weights := make(map[string]map[string]int)
+    for _, node := range new_nodes {
+        new_graph[node] = []string{}
+        new_weights[node] = make(map[string]int)
+        for _, other_node := range new_nodes {
+            new_weights[node][other_node] = 0
+        }
+    }
+
+    for _, node := range nodes {
+        if node != merge1 && node != merge2 {
+            for _, neighbour := range graph[node] {
+                if neighbour == merge1 || neighbour == merge2 {
+                    // Point to the new node
+                    new_graph[node] = append(new_graph[node], to_merge)
+                    new_graph[to_merge] = append(new_graph[to_merge], node)
+
+                    // Add weights based on the combined weights
+                    new_weight := weights[node][merge1] + weights[node][merge2]
+                    new_weights[node][to_merge] = new_weight
+                    new_weights[to_merge][node] = new_weight 
+                } else {
+                    // Copy the old weights
+                    new_graph[node] = append(new_graph[node], neighbour)
+                    new_weights[node][neighbour] = weights[node][neighbour]
+                }
+            }
+        }
+    }
+
+    for _, node := range new_nodes {
+        new_graph[node] = RemoveDuplicates[string](new_graph[node])
+    }
+
+    return new_graph, new_weights, new_nodes
+}
+
+func KargersRun(graph map[string][]string, weights map[string]map[string]int, nodes []string) (int, int) {
+
+        run_nodes := []string{}
+        for _, node := range nodes {
+            run_nodes = append(run_nodes, node)
+        }
+        run_graph := make(map[string][]string)
+        run_weights := make(map[string]map[string]int)
+        for _, node := range run_nodes {
+            run_graph[node] = []string{}
+            run_weights[node] = make(map[string]int)
+            for _, other_node := range run_nodes {
+                run_weights[node][other_node] = 0
+            }
+            for _, neighbour := range graph[node] {
+                run_graph[node] = append(run_graph[node], neighbour)
+                run_weights[node][neighbour] = weights[node][neighbour]
+            }
+        }
+
+        for len(run_nodes) > 2 {
+            first := rand.Intn(len(run_nodes))
+            second := rand.Intn(len(run_nodes))
+            for second == first {
+                second = rand.Intn(len(run_nodes))
+            }
+            merge1 := run_nodes[first]
+            merge2 := run_nodes[second]
+            run_graph, run_weights, run_nodes = mergeNodes(run_graph, run_weights, run_nodes, merge1, merge2)
+
+        }
+
+        group1_size := len(run_graph[run_nodes[0]]) / 3
+        group2_size := len(run_graph[run_nodes[1]]) / 3
+
+        cuts := run_weights[run_nodes[0]][run_nodes[1]]
+        groups_size_multiplied := group1_size * group2_size
+        return cuts, groups_size_multiplied
+}
+
+func KargersWorker(id int, graph map[string][]string, weights map[string]map[string]int, nodes []string, max_runs int, results chan<- [2]int, wg *sync.WaitGroup, do_runs int) {
+    for i := 0; i < do_runs; i++ {
+        min_cut, min_groups_size := KargersRun(graph, weights, nodes)
+        results <- [2]int{min_cut, min_groups_size}
+    }
+    wg.Done()
+}
+
+func KargersMinCut(graph map[string][]string, weights map[string]map[string]int, nodes []string, max_runs int, numWorkers int) (int, int) {
+    
+    // Create channels
+    var wg sync.WaitGroup
+    results := make(chan [2]int, numWorkers)
+    final_results := make(chan [2]int)
+
+    // Start workers
+    for i := 0; i < numWorkers; i++ {
+        wg.Add(1)
+        go KargersWorker(i, graph, weights, nodes, max_runs, results, &wg, 1 + max_runs / numWorkers)
+    }
+
+    // Collect results in a separate goroutine
+    go func() {
+        wg.Wait()
+        close(results)
+    }()
+
+    // Aggregate results
+    go func() {
+        min_cut := math.MaxInt
+        min_groups_size := 0
+
+        for result := range results {
+            if result[0] < min_cut {
+                min_cut = result[0]
+                min_groups_size = result[1]
+            }
+        }
+        final_results <- [2]int{min_cut, min_groups_size}
+        close(final_results)
+    }()
+
+    // Read from the final results
+    result := <-final_results
+    return result[0], result[1]
+}
+
+
+func processWorker(id int, combinations <-chan [3][2]string, results chan<- int, wg *sync.WaitGroup, graph map[string][]string, nodes []string) {
+    defer wg.Done()
+    for combination := range combinations {
+        fmt.Println(id, "processing combination", combination)
+        count := getConnectedGroupsCount(graph, nodes, combination)
+        results <- count
+    }
+}
+
+func processWorkerCombChannel(id int, combos <-chan []int, results chan<- int, wg *sync.WaitGroup, graph map[string][]string, nodes []string, connections [][2]string) {
+    defer wg.Done()
+    for combination := range combos {
+        //fmt.Println("Processing combination", combination, "on worker", id)
+        comb := [3][2]string{}
+        for i, index := range combination {
+            comb[i] = connections[index]
+        }
+        count := getConnectedGroupsCount(graph, nodes, comb)
+        results <- count
+    }
+}
+
+
+func main() {
+	if debug {
+		fmt.Println("Debug enabled")
+	}
+	cores_f := flag.Int("t", -1, "How many cores (threads) should we run?")
+	filename_f := flag.String("f", "", "On which file should we run this?")
+	flag.Parse()
+
+	// The second element in os.Args is the first argument
+	filename := *filename_f
+	if len(filename) == 0 {
+		fmt.Println("Please provide a filename")
+		os.Exit(1)
+	}
+	cores := *cores_f
+	if cores < 0 {
+		cores = 1
+	}
+
+	dat, err := os.ReadFile(filename)
+	Check(err)
+
+	// Read file
+	fmt.Println("Reading file", filename)
+    graph := make(map[string][]string)
+    nodes := []string{}
+    connections := [][2]string{}
+	for _, line := range strings.Split(string(dat), "\n") {
+		cleaned_line := strings.TrimSpace(line)
+		if len(cleaned_line) > 0 {
+            // Split the line into the two parts
+            parts := strings.Split(cleaned_line, ": ")
+            
+            left := parts[0]
+            right := strings.TrimSpace(parts[1])
+            // Split the right part into the individual elements
+            right_parts := strings.Split(right, " ")
+            graph[left] = []string{}
+            nodes = append(nodes, left)
+            for _, part := range right_parts {
+                graph[left] = append(graph[left], part)
+                nodes = append(nodes, part)
+                connections = append(connections, [2]string{left, part})
+            }
+		}
+	}
+    nodes = RemoveDuplicates(nodes)
+    for k, v := range graph {
+        for _, val := range v {
+            graph[val] = append(graph[val], k)
+        }
+    }
+    fmt.Println("Nodes", len(nodes))
+    fmt.Println("Connections", len(connections))
+
+    // Reduce connections
+    reduced_connections := reduceConnections(graph, nodes, connections)
+    fmt.Println("Reduced connections to", len(reduced_connections))
+
+    // Create workers
+    num_workers := cores
+
+    // Create channels
+    var wg sync.WaitGroup
+    combinations := make(chan []int, num_workers)
+    results := make(chan int, num_workers)
+    final_results := make(chan int, num_workers)
+
+    // Start workers
+    for i := 0; i < num_workers; i++ {
+        wg.Add(1)
+        go processWorkerCombChannel(i, combinations, results, &wg, graph, nodes, reduced_connections)
+    }
+
+    // Collect results in a separate goroutine
+    go func() {
+        wg.Wait()
+        close(results)
+    }()
+
+    // Aggregate results
+    go func() {
+        total := 0
+        for result := range results {
+            if result > 0 {
+                if debug {
+                    fmt.Println("Result", result)
+                }
+                total += result
+            }
+        }
+        final_results <- total
+        close(final_results)
+    }()
+
+
+    // Generate combinations
+    go generateCombinationsChannel(len(reduced_connections), 3, combinations)
+
+
+    // Collect results
+    total := 0
+    for result := range final_results {
+        total += result
+    }
+    fmt.Println("Total", total)
+}
